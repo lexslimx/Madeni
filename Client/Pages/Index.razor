@@ -1,9 +1,62 @@
 ﻿@page "/"
+@using Madeni.Shared.Dtos
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+@attribute [Authorize]
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h4>Dashboard</h4>
 
-Welcome to your new app.
+@if (DashboardDto == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="card col-md-4">
+            <div class="card-body">
+                <h5 class="card-title">Income</h5>
+                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                <p class="card-text">KES @DashboardDto.IncomeTotal</p>
+                <a href="addincome" class="card-link">Add</a>
+                <a href="incomes" class="card-link">View</a>
+            </div>
+        </div>
+        <div class="card col-md-4">
+            <div class="card-body">
+                <h5 class="card-title">Expenses</h5>
+                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                <p class="card-text">KES @DashboardDto.ExpenseTotal</p>
+                <a href="addexpense" class="card-link">Add</a>
+                <a href="expenses" class="card-link">View</a>
+            </div>
+        </div>
+        <div class="card col-md-4">
+            <div class="card-body">
+                <h5 class="card-title">Loans</h5>
+                <h6 class="card-subtitle mb-2 text-muted"></h6>
+                <p class="card-text">KES @DashboardDto.LoanTotal</p>
+                <a href="addloan" class="card-link">Add</a>
+                <a href="loans" class="card-link">View</a>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private DashboardDto? DashboardDto;
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            DashboardDto = await Http.GetFromJsonAsync<DashboardDto>("/api/Dashboard");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

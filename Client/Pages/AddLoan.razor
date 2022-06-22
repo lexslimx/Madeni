@@ -1,8 +1,10 @@
 ﻿@page "/Addloan"
 @using Madeni.Shared.Dtos
+@using Microsoft.AspNetCore.Authorization
 @inject ILogger<AddLoan> Logger
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 <h3>AddLoan</h3>
 
 <EditForm Model="@LoanDto" OnValidSubmit="@HandleValidSubmit">

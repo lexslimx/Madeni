@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Madeni.Server.Data;
+using Madeni.Shared.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,24 @@ namespace Madeni.Server.Controllers
     [ApiController]
     public class DashboardController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public DashboardController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET: api/<DashboardController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public DashboardDto Get()
         {
-            return new string[] { "value1", "value2" };
-        }
+            var dashboardDto = new DashboardDto
+            {
+                IncomeTotal = _context.Incomes.Sum(i => i.Amount),
+                ExpenseTotal = _context.Expense.Sum(i => i.Amount),
+                LoanTotal = _context.Loans.Sum(i => i.Amount),
+            };
 
-        // GET api/<DashboardController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<DashboardController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<DashboardController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DashboardController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return dashboardDto;
         }
     }
 }

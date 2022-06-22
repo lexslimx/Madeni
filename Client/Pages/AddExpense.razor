@@ -1,8 +1,10 @@
 ﻿@page "/addexpense"
 @using Madeni.Shared.Dtos
+@using Microsoft.AspNetCore.Authorization
 @inject ILogger<AddExpense> Logger
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 <h3>Add Expense</h3>
 
 <EditForm Model="@ExpenseDto" OnValidSubmit="@HandleValidSubmit">
