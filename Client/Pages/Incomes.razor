@@ -1,0 +1,57 @@
+﻿@page "/incomes"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Madeni.Shared;
+@using Madeni.Shared.Dtos
+@inject HttpClient Http
+
+<PageTitle>My Income</PageTitle>
+
+<h1>My Income</h1>
+
+<p>This is a list of your incom sources.</p>
+
+@if (IncomeDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Frequency</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var incomeDto in IncomeDtos)
+            {
+                <tr>
+                    <td>@incomeDto.Name</td>
+                    <td>@incomeDto.Amount</td>
+                    <td>@incomeDto.Type</td>
+                    <td>@incomeDto.Frequency</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IncomeDto[]? IncomeDtos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IncomeDtos = await Http.GetFromJsonAsync<IncomeDto[]>("/api/Incomes");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

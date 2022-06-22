@@ -1,0 +1,53 @@
+﻿@page "/expenses"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Madeni.Shared;
+@using Madeni.Shared.Dtos
+@inject HttpClient Http
+
+<PageTitle>My Expenses</PageTitle>
+
+<h1>My Expenses</h1>
+
+<p>This is a list of all your expenses.</p>
+
+@if (ExpenseDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ExpenseDto in ExpenseDtos)
+            {
+                <tr>
+                    <td>@ExpenseDto.Name</td>
+                    <td>@ExpenseDto.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ExpenseDto[]? ExpenseDtos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ExpenseDtos = await Http.GetFromJsonAsync<ExpenseDto[]>("/api/expenses");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

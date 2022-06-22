@@ -1,0 +1,57 @@
+﻿@page "/Addloan"
+@using Madeni.Shared.Dtos
+@inject ILogger<AddLoan> Logger
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+<h3>AddLoan</h3>
+
+<EditForm Model="@LoanDto" OnValidSubmit="@HandleValidSubmit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="LoanDto.Name" class="control-label">Name</label>
+        <input asp-for="LoanDto.Name" @bind="LoanDto.Name" class="form-control" />
+        <span asp-validation-for="LoanDto.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LoanDto.Amount" class="control-label">Amount</label>
+        <input asp-for="LoanDto.Amount" @bind="LoanDto.Amount" class="form-control" />
+        <span asp-validation-for="LoanDto.Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LoanDto.StartSate" class="control-label">Start Date</label>
+        <input asp-for="LoanDto.StartSate" @bind="LoanDto.StartSate" class="form-control" />
+        <span asp-validation-for="LoanDto.StartSate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LoanDto.ProspectiveDate" class="control-label">Due Date</label>
+        <input asp-for="LoanDto.ProspectiveDate" @bind="LoanDto.ProspectiveDate" class="form-control" />
+        <span asp-validation-for="LoanDto.ProspectiveDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">        
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm>
+@code {
+    public LoanDto? LoanDto { get; set; }
+    public string? UiMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        LoanDto = new LoanDto();
+    }
+    private async Task  HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        try
+        {
+            var result = await Http.PostAsJsonAsync("/api/Loans", LoanDto);
+            UiMessage = "Loan Added";
+            NavigationManager.NavigateTo("/loans");
+        }
+        catch (Exception exception)
+        {
+            UiMessage = exception.Message;
+        }
+    }
+}

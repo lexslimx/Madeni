@@ -1,0 +1,47 @@
+﻿@page "/addincome"
+@using Madeni.Shared.Dtos
+@inject ILogger<AddIncome> Logger
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+<h3>Add Income</h3>
+
+<EditForm Model="@IncomeDto" OnValidSubmit="@HandleValidSubmit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="IncomeDto.Name" class="control-label">Name</label>
+        <input asp-for="IncomeDto.Name" @bind="IncomeDto.Name" class="form-control" />
+        <span asp-validation-for="IncomeDto.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IncomeDto.Amount" class="control-label">Amount</label>
+        <input asp-for="IncomeDto.Amount" @bind="IncomeDto.Amount" class="form-control" />
+        <span asp-validation-for="IncomeDto.Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">        
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm>
+@code {
+    public IncomeDto? IncomeDto { get; set; }
+    public string? UiMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        IncomeDto = new IncomeDto();
+    }
+    private async Task  HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        try
+        {
+            var result = await Http.PostAsJsonAsync("/api/Incomes", IncomeDto);
+            UiMessage = "Income Added";
+            NavigationManager.NavigateTo("/incomes");
+        }
+        catch (Exception exception)
+        {
+            UiMessage = exception.Message;
+        }
+    }
+}
