@@ -23,8 +23,9 @@ namespace Madeni.Server.Controllers
             var dashboardDto = new DashboardDto
             {
                 IncomeTotal = _context.Incomes.Sum(i => i.Amount),
-                ExpenseTotal = _context.Expense.Sum(i => i.Amount),
+                ExpenseTotal = _context.Expenses.Sum(i => i.Amount),
                 LoanTotal = _context.Loans.Sum(i => i.Amount),
+                RepaymentsTotal = _context.Repayments.Sum(i => i.Amount),
             };
 
             return dashboardDto;

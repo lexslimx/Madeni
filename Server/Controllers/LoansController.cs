@@ -49,7 +49,7 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Loans/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Loan>> GetLoan(int id)
+        public async Task<ActionResult<LoanDto>> GetLoan(int id)
         {
           if (_context.Loans == null)
           {
@@ -62,7 +62,16 @@ namespace Madeni.Server.Controllers
                 return NotFound();
             }
 
-            return loan;
+            var loanDto = new LoanDto
+            {
+                Id = loan.Id,
+                Name = loan.Name,
+                Amount = loan.Amount,
+                ProspectiveDate = loan.ProspectiveDate,
+                StartSate = loan.StartSate
+            };
+
+            return loanDto;
         }
 
         // PUT: api/Loans/5

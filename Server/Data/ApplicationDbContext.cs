@@ -13,10 +13,9 @@ namespace Madeni.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-        public DbSet<Loan> Loans { get; set; }
-
-        public DbSet<Income> Incomes { get; set; }
-
-        public DbSet<Expense> Expense { get; set; }
+        public DbSet<Loan>? Loans { get; set; }
+        public DbSet<Income>? Incomes { get; set; }
+        public DbSet<Expense>? Expenses { get; set; }
+        public DbSet<Repayment>? Repayments { get; set; }
     }
 }

@@ -1,0 +1,54 @@
+﻿@page "/repayments"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Madeni.Shared;
+@using Madeni.Shared.Dtos
+@inject HttpClient Http
+@attribute [Authorize]
+
+<PageTitle>My Repayments</PageTitle>
+
+<h1>My Repayments</h1>
+
+<p>This is a list of all your Repayments.</p>
+
+@if (RepaymentDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var repaymentDto in RepaymentDtos)
+            {
+                <tr>
+                    <td>@repaymentDto.Amount</td>
+                    <td>@repaymentDto.Date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private RepaymentDto[]? RepaymentDtos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            RepaymentDtos = await Http.GetFromJsonAsync<RepaymentDto[]>("/api/Repayments");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}
