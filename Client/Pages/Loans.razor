@@ -25,6 +25,8 @@ else
                 <th>Name</th>
                 <th>Due Date</th>
                 <th>Loan Date</th>
+                <th>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +37,9 @@ else
                     <td>@loanDto.Name</td>
                     <td>@loanDto.StartSate</td>
                     <td>@loanDto.ProspectiveDate</td>
+                    <td>
+                        <a href="viewLoan/@loanDto.Id" class="card-link">View</a>
+                    </td>
                 </tr>
             }
         </tbody>

@@ -1,0 +1,94 @@
+﻿@page "/AddRepayment/{LoanId}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Madeni.Shared;
+@using Madeni.Shared.Dtos
+@inject HttpClient Http
+@inject ILogger<AddRepayment> Logger
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+
+<PageTitle>Add Repayment Loan</PageTitle>
+
+<h1>My Loan @LoanId</h1>
+
+<p>Loan Details.</p>
+
+@if (loanDto == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@loanDto.Name Loan</h5>
+            <p class="card-text">KES @loanDto.Amount</p>
+            <h6 class="card-subtitle mb-2 text-muted">Taken On: @loanDto.StartSate</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Due On: @loanDto.ProspectiveDate</h6>
+            <a href="AddRepayment/@loanDto.Id" class="card-link">Add Repayment</a>
+            <a href="#" class="card-link">Delete</a>
+        </div>
+    </div>
+}
+<div class="row">
+    <EditForm Model="@RepaymentDto" OnValidSubmit="@HandleValidSubmit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="RepaymentDto.Date" class="control-label">Date</label>
+            <input asp-for="RepaymentDto.Date" @bind="RepaymentDto.Date" class="form-control" />
+            <span asp-validation-for="RepaymentDto.Date" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="RepaymentDto.Amount" class="control-label">Amount</label>
+            <input asp-for="RepaymentDto.Amount" @bind="RepaymentDto.Amount" class="form-control" />
+            <span asp-validation-for="RepaymentDto.Amount" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="RepaymentDto.LoanId" class="control-label">LoanId</label>
+            <input asp-for="RepaymentDto.LoanId" @bind="RepaymentDto.LoanId" class="form-control" />
+            <span asp-validation-for="RepaymentDto.LoanId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private LoanDto? loanDto;
+    private RepaymentDto? RepaymentDto;
+    [Parameter]
+    public string? LoanId { get; set; }
+    public string? UiMessage { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        RepaymentDto = new RepaymentDto();
+        try
+        {
+            loanDto = await Http.GetFromJsonAsync<LoanDto>($"/api/Loans/{LoanId}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+
+        try
+        {
+            RepaymentDto.LoanId = loanDto.Id;
+            var result = await Http.PostAsJsonAsync("/api/Repayments", RepaymentDto);
+            UiMessage = "Income Added";
+            NavigationManager.NavigateTo($"/viewloan/{loanDto.Id}");
+        }
+        catch (Exception exception)
+        {
+            UiMessage = exception.Message;
+        }
+    }
+}

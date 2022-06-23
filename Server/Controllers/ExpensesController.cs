@@ -26,13 +26,13 @@ namespace Madeni.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExpenseDto>>> GetExpense()
         {
-            if (_context.Expense == null)
+            if (_context.Expenses == null)
             {
                 return NotFound();
             }
 
             var ExpenseDtos = new List<ExpenseDto>();
-            foreach (var expense in await _context.Expense.ToListAsync())
+            foreach (var expense in await _context.Expenses.ToListAsync())
             {
                 var expenseDto = new ExpenseDto
                 {
@@ -49,11 +49,11 @@ namespace Madeni.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> GetExpense(int id)
         {
-          if (_context.Expense == null)
+          if (_context.Expenses == null)
           {
               return NotFound();
           }
-            var expense = await _context.Expense.FindAsync(id);
+            var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
             {
@@ -99,7 +99,7 @@ namespace Madeni.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Expense>> PostExpense(ExpenseDto expenseDto)
         {
-          if (_context.Expense == null)
+          if (_context.Expenses == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Expense'  is null.");
           }
@@ -108,7 +108,7 @@ namespace Madeni.Server.Controllers
                 Name = expenseDto.Name,
                 Amount = expenseDto.Amount
             };
-            _context.Expense.Add(expense);
+            _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetExpense", new { id = expense.Id }, expense);
@@ -118,17 +118,17 @@ namespace Madeni.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExpense(int id)
         {
-            if (_context.Expense == null)
+            if (_context.Expenses == null)
             {
                 return NotFound();
             }
-            var expense = await _context.Expense.FindAsync(id);
+            var expense = await _context.Expenses.FindAsync(id);
             if (expense == null)
             {
                 return NotFound();
             }
 
-            _context.Expense.Remove(expense);
+            _context.Expenses.Remove(expense);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -136,7 +136,7 @@ namespace Madeni.Server.Controllers
 
         private bool ExpenseExists(int id)
         {
-            return (_context.Expense?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Expenses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

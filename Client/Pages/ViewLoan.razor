@@ -1,0 +1,77 @@
+﻿@page "/viewloan/{LoanId}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Madeni.Shared;
+@using Madeni.Shared.Dtos
+@inject HttpClient Http
+@attribute [Authorize]
+
+<PageTitle>My Loan</PageTitle>
+
+<h1>My Loan @LoanId</h1>
+
+<p>Loan Details.</p>
+
+@if (loanDto == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@loanDto.Name Loan</h5>
+            <p class="card-text">KES @loanDto.Amount</p>
+            <h6 class="card-subtitle mb-2 text-muted">Taken On: @loanDto.StartSate</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Due On: @loanDto.ProspectiveDate</h6>         
+            <a href="AddRepayment/@loanDto.Id" class="card-link">Add Repayment</a>
+            <a href="#" class="card-link">Delete</a>
+        </div>
+    </div>
+}
+<div class="row">
+    @if (Repayments == null)
+    {
+        <p><em>Loading repayments...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var repayment in Repayments)
+                {
+                    <tr>
+                        <td>@repayment.Amount</td>
+                        <td>@repayment.Date</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private LoanDto? loanDto;
+    private RepaymentDto[]? Repayments;
+    [Parameter]
+    public string LoanId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            loanDto = await Http.GetFromJsonAsync<LoanDto>($"/api/Loans/{LoanId}");
+            Repayments = await Http.GetFromJsonAsync<RepaymentDto[]>($"/api/Repayments?LoanId={LoanId}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}
