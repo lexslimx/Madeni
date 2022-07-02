@@ -2,6 +2,7 @@
 @using Madeni.Shared.Dtos
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
 
@@ -17,39 +18,53 @@ else
 {
     <div class="row">
         <div class="card col-md-3">
-            <div class="card-body">
+            <div class="card-title">
                 <h5 class="card-title">Income</h5>
-                <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <p class="card-text">KES @DashboardDto.IncomeTotal</p>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+                <h6 class="card-subtitle mb-2 text-muted">Balance: @DashboardDto.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
+            </div>
+            <div class="card-footer">
                 <a href="addincome" class="card-link">Add</a>
                 <a href="incomes" class="card-link">View</a>
             </div>
         </div>
         <div class="card col-md-3">
-            <div class="card-body">
+            <div class="card-title">
                 <h5 class="card-title">Expenses</h5>
-                <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <p class="card-text">KES @DashboardDto.ExpenseTotal</p>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+            </div>
+            <div class="card-footer">
                 <a href="addexpense" class="card-link">Add</a>
                 <a href="expenses" class="card-link">View</a>
             </div>
         </div>
         <div class="card col-md-3">
-            <div class="card-body">
+            <div class="card-title">
                 <h5 class="card-title">Loans</h5>
+            </div>
+            <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <p class="card-text">KES @DashboardDto.LoanTotal</p>
+                <p class="card-text">@DashboardDto.LoanTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+                <h6 class="card-subtitle mb-2 text-muted">Outstanding: @((DashboardDto.LoanTotal - DashboardDto.RepaymentsTotal).ToString("C", CultureInfo.CreateSpecificCulture("en-KE")))</h6>
+            </div>
+            <div class="card-footer">
                 <a href="addloan" class="card-link">Add</a>
                 <a href="loans" class="card-link">View</a>
             </div>
         </div>
         <div class="card col-md-3">
-            <div class="card-body">
+            <div class="card-title">
                 <h5 class="card-title">Repayments</h5>
-                <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <p class="card-text">KES @DashboardDto.RepaymentsTotal</p>
-                <a href="#" class="card-link">Add</a>
-                <a href="#" class="card-link">View</a>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@DashboardDto.RepaymentsTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+            </div>
+            <div class="card-footer m-0">               
+                <a href="repayments" class="card-link">View</a>
             </div>
         </div>
     </div>

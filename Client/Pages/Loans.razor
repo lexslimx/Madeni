@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Madeni.Shared;
 @using Madeni.Shared.Dtos
+@using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
 
@@ -21,10 +22,10 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Amount</th>
                 <th>Name</th>
+                <th>Amount</th>               
+                <th>Start Date</th>
                 <th>Due Date</th>
-                <th>Loan Date</th>
                 <th>
                 </th>
             </tr>
@@ -33,16 +34,19 @@ else
             @foreach (var loanDto in LoanDtos)
             {
                 <tr>
-                    <td>@loanDto.Amount</td>
                     <td>@loanDto.Name</td>
-                    <td>@loanDto.StartSate</td>
-                    <td>@loanDto.ProspectiveDate</td>
+                    <td>@loanDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>                    
+                    <td>@loanDto.StartDate.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@loanDto.ProspectiveDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>
                         <a href="viewLoan/@loanDto.Id" class="card-link">View</a>
                     </td>
                 </tr>
             }
         </tbody>
+        <tfoot>
+            Total : @LoanDtos.Sum(e=>e.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) 
+        </tfoot>
     </table>
 }
 

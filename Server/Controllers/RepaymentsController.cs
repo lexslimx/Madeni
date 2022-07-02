@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
+using System.Security.Claims;
 
 namespace Madeni.Server.Controllers
 {
@@ -30,16 +31,16 @@ namespace Madeni.Server.Controllers
           {
               return NotFound();
           }
-
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var repaymentDtos = new List<RepaymentDto>();
             List<Repayment> repayments = new List<Repayment>();
             if (loanId == null)
             {
-                repayments = await _context.Repayments.Where(r => r.LoanId == loanId).Include(r => r.Loan).ToListAsync();
+                repayments = await _context.Repayments.Where(r => r.LoanId == loanId && r.UserId == userId).Include(r => r.Loan).ToListAsync();
             }
             else
             {
-                repayments = await _context.Repayments.Include(r => r.Loan).ToListAsync();
+                repayments = await _context.Repayments.Where(r => r.UserId == userId).Include(r => r.Loan).ToListAsync();
             }
 
             foreach (var repayment in repayments)
@@ -116,13 +117,14 @@ namespace Madeni.Server.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Repayments'  is null.");
           }
-
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var repayment = new Repayment
             {
                 Id = repaymentDto.Id,
                 Amount = repaymentDto.Amount,
                 Date = repaymentDto.Date,
-                LoanId = repaymentDto.LoanId
+                LoanId = repaymentDto.LoanId,
+                UserId = userId
             };
             _context.Repayments.Add(repayment);
             await _context.SaveChangesAsync();

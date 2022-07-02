@@ -13,5 +13,6 @@ namespace Madeni.Shared.Dtos
         public decimal Amount { get; set; }
         public string? Frequency { get; set; }
         public string? Type { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Madeni.Server.Data;
 using Madeni.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,15 +19,22 @@ namespace Madeni.Server.Controllers
         }
         // GET: api/<DashboardController>
         [HttpGet]
-        public DashboardDto Get()
+        public DashboardDto? Get()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId == null)
+            {
+                return new DashboardDto();
+            }
             var dashboardDto = new DashboardDto
             {
-                IncomeTotal = _context.Incomes.Sum(i => i.Amount),
-                ExpenseTotal = _context.Expenses.Sum(i => i.Amount),
-                LoanTotal = _context.Loans.Sum(i => i.Amount),
-                RepaymentsTotal = _context.Repayments.Sum(i => i.Amount),
+                IncomeTotal = _context.Incomes.Where(i => i.UserId == userId).Sum(i => i.Amount),
+                ExpenseTotal = _context.Expenses.Where(i => i.UserId == userId).Sum(i => i.Amount),
+                LoanTotal = _context.Loans.Where(i => i.UserId == userId).Sum(i => i.Amount),
+                RepaymentsTotal = _context.Repayments.Where(i => i.UserId == userId).Sum(i => i.Amount),
             };
+            dashboardDto.Balance = (dashboardDto.IncomeTotal - dashboardDto.ExpenseTotal);
+
 
             return dashboardDto;
         }

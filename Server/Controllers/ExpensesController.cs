@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
+using System.Security.Claims;
 
 namespace Madeni.Server.Controllers
 {
@@ -30,9 +31,9 @@ namespace Madeni.Server.Controllers
             {
                 return NotFound();
             }
-
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var ExpenseDtos = new List<ExpenseDto>();
-            foreach (var expense in await _context.Expenses.ToListAsync())
+            foreach (var expense in await _context.Expenses.Where(e=>e.UserId == userId).ToListAsync())
             {
                 var expenseDto = new ExpenseDto
                 {
@@ -103,10 +104,12 @@ namespace Madeni.Server.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Expense'  is null.");
           }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var expense = new Expense
             {                
                 Name = expenseDto.Name,
-                Amount = expenseDto.Amount
+                Amount = expenseDto.Amount,
+                UserId = userId
             };
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();

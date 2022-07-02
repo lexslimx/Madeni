@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
+using System.Security.Claims;
 
 namespace Madeni.Server.Controllers
 {
@@ -30,9 +31,9 @@ namespace Madeni.Server.Controllers
           {
               return NotFound();
           }
-
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loanDtos = new List<LoanDto>();
-            foreach(var loan in await _context.Loans.ToListAsync())
+            foreach(var loan in await _context.Loans.Where(e=>e.UserId == userId).ToListAsync())
             {
                 var loanDto = new LoanDto
                 {
@@ -40,7 +41,7 @@ namespace Madeni.Server.Controllers
                     Name = loan.Name,
                     Amount = loan.Amount,
                     ProspectiveDate = loan.ProspectiveDate,
-                    StartSate = loan.StartSate                    
+                    StartDate = loan.StartDate                   
                 };
                 loanDtos.Add(loanDto);
             }
@@ -68,7 +69,7 @@ namespace Madeni.Server.Controllers
                 Name = loan.Name,
                 Amount = loan.Amount,
                 ProspectiveDate = loan.ProspectiveDate,
-                StartSate = loan.StartSate
+                StartDate = loan.StartDate
             };
 
             return loanDto;
@@ -114,14 +115,16 @@ namespace Madeni.Server.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Loans'  is null.");
           }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var loan = new Loan
             {
                 Id = loanDto.Id,
                 Name = loanDto.Name,
                 Amount = loanDto.Amount,
                 ProspectiveDate = loanDto.ProspectiveDate,
-                StartSate = loanDto.StartSate
-            };
+                StartDate = loanDto.StartDate,
+               UserId = userId
+        };
 
             _context.Loans.Add(loan);
             await _context.SaveChangesAsync();
