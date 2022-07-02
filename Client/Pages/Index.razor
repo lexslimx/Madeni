@@ -72,7 +72,8 @@ else
         </div>
     </div>
 
-<p>connectionStringTest1: @configuration.GetConnectionString("DefaultConnection")</p>
+<p>DefaultConnection: @configuration.GetConnectionString("DefaultConnection")</p>
+<p>LocalSqlServer: @configuration.GetConnectionString("LocalSqlServer")</p>
 }
 @code {
     private DashboardDto? DashboardDto;
