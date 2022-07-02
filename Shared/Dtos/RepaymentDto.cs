@@ -13,5 +13,6 @@ namespace Madeni.Shared.Dtos
         public DateTime Date { get; set; }
         public string? LoanName { get; set; }
         public int LoanId { get; set; }
+        public string UserId { get; set; }
     }
 }

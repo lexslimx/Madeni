@@ -4,6 +4,7 @@
 @inject ILogger<AddExpense> Logger
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 <h3>Add Expense</h3>
 
@@ -29,7 +30,7 @@
     </div>
 </EditForm>
 @code {
-    public ExpenseDto? ExpenseDto { get; set; }
+    public ExpenseDto ExpenseDto { get; set; } = new ExpenseDto();
     public string? UiMessage { get; set; } = "";
 
     protected override void OnInitialized()
@@ -42,6 +43,10 @@
 
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            ExpenseDto.UserId = userId;
             var result = await Http.PostAsJsonAsync("/api/expenses", ExpenseDto);
             UiMessage = "Expense Added";
             NavigationManager.NavigateTo("/expenses");

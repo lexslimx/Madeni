@@ -25,15 +25,14 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Incomes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncomeDto>>> GetIncomes()
+        public async Task<ActionResult<IEnumerable<IncomeDto>>> GetIncomes(string userId)
         {
-          if (_context.Incomes == null)
-          {
-              return NotFound();
-          }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (_context.Incomes == null)
+            {
+                return NotFound();
+            }
             var incomeDtos = new List<IncomeDto>();
-            foreach (var income in await _context.Incomes.Where(e=>e.UserId == userId).ToListAsync())
+            foreach (var income in await _context.Incomes.Where(e => e.UserId == userId).ToListAsync())
             {
                 var incomeDto = new IncomeDto
                 {
@@ -41,7 +40,7 @@ namespace Madeni.Server.Controllers
                     Amount = income.Amount,
                     Name = income.Name,
                     Frequency = income.Frequency.ToString(),
-                    Type = income.Type.ToString()                    
+                    Type = income.Type.ToString()
                 };
                 incomeDtos.Add(incomeDto);
             }
@@ -53,10 +52,10 @@ namespace Madeni.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Income>> GetIncome(int id)
         {
-          if (_context.Incomes == null)
-          {
-              return NotFound();
-          }
+            if (_context.Incomes == null)
+            {
+                return NotFound();
+            }
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
@@ -103,17 +102,16 @@ namespace Madeni.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<IncomeDto>> PostIncome(IncomeDto incomeDto)
         {
-          if (_context.Incomes == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Incomes'  is null.");
-          }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (_context.Incomes == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Incomes'  is null.");
+            }
             var income = new Income
             {
                 Name = incomeDto.Name,
                 Amount = incomeDto.Amount,
-                Frequency  = Models.Enums.IncomeFrequency.Monthly,
-                UserId = userId
+                Frequency = Models.Enums.IncomeFrequency.Monthly,
+                UserId = incomeDto.UserId
             };
 
             _context.Incomes.Add(income);

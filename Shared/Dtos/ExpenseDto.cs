@@ -12,5 +12,6 @@ namespace Madeni.Shared.Dtos
         public string? Name { get; set; }
         public decimal Amount { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
+        public string UserId { get; set; }
     }
 }

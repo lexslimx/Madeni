@@ -14,5 +14,6 @@ namespace Madeni.Shared.Dtos
         public string? Frequency { get; set; }
         public string? Type { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
+        public string UserId { get; set; }
     }
 }

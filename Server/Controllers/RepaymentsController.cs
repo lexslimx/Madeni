@@ -25,22 +25,21 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Repayments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RepaymentDto>>> GetRepayments(int? loanId)
+        public async Task<ActionResult<IEnumerable<RepaymentDto>>> GetRepayments(int? loanId, string userId)
         {
           if (_context.Repayments == null)
           {
               return NotFound();
-          }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+          }            
             var repaymentDtos = new List<RepaymentDto>();
             List<Repayment> repayments = new List<Repayment>();
             if (loanId == null)
             {
-                repayments = await _context.Repayments.Where(r => r.LoanId == loanId && r.UserId == userId).Include(r => r.Loan).ToListAsync();
+                repayments = await _context.Repayments.Where(r => r.UserId == userId).Include(r => r.Loan).ToListAsync();
             }
             else
             {
-                repayments = await _context.Repayments.Where(r => r.UserId == userId).Include(r => r.Loan).ToListAsync();
+                repayments = await _context.Repayments.Where(r => r.LoanId == loanId && r.UserId == userId).Include(r => r.Loan).ToListAsync();
             }
 
             foreach (var repayment in repayments)
@@ -51,7 +50,8 @@ namespace Madeni.Server.Controllers
                     Amount = repayment.Amount,
                     Date = repayment.Date,
                     LoanName = repayment.Loan.Name,
-                    LoanId = repayment.LoanId
+                    LoanId = repayment.LoanId,
+                    UserId = repayment.UserId
                 };
 
                 repaymentDtos.Add(repaymentDto);
@@ -124,7 +124,7 @@ namespace Madeni.Server.Controllers
                 Amount = repaymentDto.Amount,
                 Date = repaymentDto.Date,
                 LoanId = repaymentDto.LoanId,
-                UserId = userId
+                UserId = repaymentDto.UserId
             };
             _context.Repayments.Add(repayment);
             await _context.SaveChangesAsync();

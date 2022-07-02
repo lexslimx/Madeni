@@ -17,8 +17,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+builder.Services
+    .AddAuthentication().AddIdentityServerJwt();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -46,8 +46,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseIdentityServer();
+
 app.UseAuthentication();
+app.UseIdentityServer();
 app.UseAuthorization();
 
 
