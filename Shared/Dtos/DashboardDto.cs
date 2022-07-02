@@ -14,6 +14,7 @@ namespace Madeni.Shared.Dtos
         public decimal RepaymentsTotal { get; set; }
         public decimal Balance { get; set; }
         public string? DefaultConnection { get; set; }
+        public string? UserId { get; set; }
     }
 }
 

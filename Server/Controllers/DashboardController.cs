@@ -34,7 +34,8 @@ namespace Madeni.Server.Controllers
                 ExpenseTotal = _context.Expenses.Where(i => i.UserId == userId).Sum(i => i.Amount),
                 LoanTotal = _context.Loans.Where(i => i.UserId == userId).Sum(i => i.Amount),
                 RepaymentsTotal = _context.Repayments.Where(i => i.UserId == userId).Sum(i => i.Amount),
-                DefaultConnection = _configuration.GetConnectionString("DefaultConnection")
+                DefaultConnection = _configuration.GetConnectionString("DefaultConnection"),
+                UserId = userId
             };
             dashboardDto.Balance = (dashboardDto.IncomeTotal - dashboardDto.ExpenseTotal);
 
