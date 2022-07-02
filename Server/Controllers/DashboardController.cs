@@ -1,5 +1,6 @@
 ﻿using Madeni.Server.Data;
 using Madeni.Shared.Dtos;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -13,18 +14,22 @@ namespace Madeni.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DashboardController(ApplicationDbContext context, IConfiguration configuration)
+        public DashboardController(ApplicationDbContext context, IConfiguration configuration, IHttpContextAccessor HttpContextAccessor)
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = HttpContextAccessor;
         }
         // GET: api/<DashboardController>
         [HttpGet]
-        public DashboardDto? Get()
+        public async Task<DashboardDto?> GetAsync()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(userId == null)
+            var principal = _httpContextAccessor.HttpContext.User;
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);            
+            
+            if (userId == null)
             {
                 return new DashboardDto
                 {
