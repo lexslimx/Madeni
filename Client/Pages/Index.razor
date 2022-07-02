@@ -5,6 +5,9 @@
 @using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
+@using Microsoft.Extensions.Configuration
+@inject Microsoft.Extensions.Configuration.IConfiguration configuration
+
 
 <PageTitle>Home</PageTitle>
 
@@ -68,6 +71,8 @@ else
             </div>
         </div>
     </div>
+
+<p>connectionStringTest1: @configuration.GetConnectionString("DefaultConnection")</p>
 }
 @code {
     private DashboardDto? DashboardDto;
