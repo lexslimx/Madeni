@@ -25,13 +25,12 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Expenses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExpenseDto>>> GetExpense()
+        public async Task<ActionResult<IEnumerable<ExpenseDto>>> GetExpense(string userId)
         {
             if (_context.Expenses == null)
             {
                 return NotFound();
-            }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }            
             var ExpenseDtos = new List<ExpenseDto>();
             foreach (var expense in await _context.Expenses.Where(e=>e.UserId == userId).ToListAsync())
             {
