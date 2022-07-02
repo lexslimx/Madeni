@@ -11,8 +11,7 @@ using System.Security.Claims;
 namespace Madeni.Server.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    [ApiController]    
     public class DashboardController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
