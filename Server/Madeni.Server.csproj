@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>Madeni.Server-373327EF-1FD5-430A-8D11-5BA3A2D1DD41</UserSecretsId>
   </PropertyGroup>

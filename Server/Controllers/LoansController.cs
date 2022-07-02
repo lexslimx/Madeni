@@ -25,13 +25,12 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Loans
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoanDto>>> GetLoans()
+        public async Task<ActionResult<IEnumerable<LoanDto>>> GetLoans(string userId)
         {
           if (_context.Loans == null)
           {
               return NotFound();
-          }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+          }           
             var loanDtos = new List<LoanDto>();
             foreach(var loan in await _context.Loans.Where(e=>e.UserId == userId).ToListAsync())
             {
@@ -69,7 +68,8 @@ namespace Madeni.Server.Controllers
                 Name = loan.Name,
                 Amount = loan.Amount,
                 ProspectiveDate = loan.ProspectiveDate,
-                StartDate = loan.StartDate
+                StartDate = loan.StartDate,
+                UserId = loan.UserId
             };
 
             return loanDto;
@@ -114,8 +114,7 @@ namespace Madeni.Server.Controllers
           if (_context.Loans == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Loans'  is null.");
-          }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+          }            
             var loan = new Loan
             {
                 Id = loanDto.Id,
@@ -123,8 +122,8 @@ namespace Madeni.Server.Controllers
                 Amount = loanDto.Amount,
                 ProspectiveDate = loanDto.ProspectiveDate,
                 StartDate = loanDto.StartDate,
-               UserId = userId
-        };
+               UserId = loanDto.UserId
+            };
 
             _context.Loans.Add(loan);
             await _context.SaveChangesAsync();

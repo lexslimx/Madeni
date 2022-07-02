@@ -18,5 +18,6 @@ namespace Madeni.Shared.Dtos
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime ProspectiveDate { get; set; } = DateTime.Now;
         public List<RepaymentDto> Repayments { get; set; }
+        public string UserId { get; set; }
     }
 }

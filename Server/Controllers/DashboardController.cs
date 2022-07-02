@@ -1,5 +1,6 @@
 ﻿using Madeni.Server.Data;
 using Madeni.Shared.Dtos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,30 +27,20 @@ namespace Madeni.Server.Controllers
         }
         // GET: api/<DashboardController>
         [HttpGet]
-        public async Task<DashboardDto?> GetAsync()
-        {
-            var principal = _httpContextAccessor.HttpContext.User;
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);            
-            
-            if (userId == null)
+        public DashboardDto GetAsync(string userId)
+        {             
+            if (String.IsNullOrEmpty(userId))
             {
-                return new DashboardDto
-                {
-                    UserId = "no user"
-                };
+                return new DashboardDto();                
             }
             var dashboardDto = new DashboardDto
             {
-                IncomeTotal = _context.Incomes.Sum(i => i.Amount),
-                ExpenseTotal = _context.Expenses.Sum(i => i.Amount),
-                LoanTotal = _context.Loans.Sum(i => i.Amount),
-                RepaymentsTotal = _context.Repayments.Sum(i => i.Amount),
-                DefaultConnection = _configuration.GetConnectionString("DefaultConnection"),
-                UserId = userId
+                IncomeTotal = _context.Incomes.Where(e=>e.UserId==userId).Sum(i => i.Amount),
+                ExpenseTotal = _context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                LoanTotal = _context.Loans.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                RepaymentsTotal = _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount)                
             };
             dashboardDto.Balance = (dashboardDto.IncomeTotal - dashboardDto.ExpenseTotal);
-
-
             return dashboardDto;
         }
     }

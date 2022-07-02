@@ -4,6 +4,7 @@
 @using Madeni.Shared;
 @using Madeni.Shared.Dtos
 @using System.Globalization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient Http
 
 <PageTitle>My Income</PageTitle>
@@ -49,7 +50,10 @@ else
     {
         try
         {
-            IncomeDtos = await Http.GetFromJsonAsync<IncomeDto[]>("/api/Incomes");
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            IncomeDtos = await Http.GetFromJsonAsync<IncomeDto[]>("/api/Incomes?userId=" + userId);
         }
         catch (AccessTokenNotAvailableException exception)
         {

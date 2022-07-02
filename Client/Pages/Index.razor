@@ -5,6 +5,7 @@
 @using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <PageTitle>Home</PageTitle>
 
 <h4>Dashboard</h4>
@@ -67,18 +68,17 @@ else
             </div>
         </div>
     </div>
-
-    <p>Default Connection: @DashboardDto.DefaultConnection</p>
-    <p>User: @DashboardDto.UserId</p>
 }
 @code {
     private DashboardDto? DashboardDto;
-
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            DashboardDto = await Http.GetFromJsonAsync<DashboardDto>("/api/Dashboard");
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            DashboardDto = await Http.GetFromJsonAsync<DashboardDto>("/api/Dashboard?userId=" + userId);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -86,4 +86,5 @@ else
         }
     }
 }
+
 

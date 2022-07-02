@@ -4,6 +4,7 @@
 @inject ILogger<AddLoan> Logger
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 <h3>AddLoan</h3>
 
@@ -47,6 +48,11 @@
 
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            LoanDto.UserId = userId;
+
             var result = await Http.PostAsJsonAsync("/api/Loans", LoanDto);
             UiMessage = "Loan Added";
             NavigationManager.NavigateTo("/loans");

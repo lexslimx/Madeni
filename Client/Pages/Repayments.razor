@@ -5,6 +5,7 @@
 @using Madeni.Shared.Dtos
 @using System.Globalization
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
 <PageTitle>My Repayments</PageTitle>
@@ -48,7 +49,10 @@ else
     {
         try
         {
-            RepaymentDtos = await Http.GetFromJsonAsync<RepaymentDto[]>("/api/Repayments");
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            RepaymentDtos = await Http.GetFromJsonAsync<RepaymentDto[]>($"/api/Repayments?userId={userId}");
         }
         catch (AccessTokenNotAvailableException exception)
         {

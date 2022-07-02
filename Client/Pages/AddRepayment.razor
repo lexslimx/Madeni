@@ -7,6 +7,7 @@
 @inject ILogger<AddRepayment> Logger
 @attribute [Authorize]
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Add Repayment Loan</PageTitle>
 
@@ -56,8 +57,8 @@ else
 </div>
 
 @code {
-    private LoanDto? loanDto;
-    private RepaymentDto? RepaymentDto;
+    private LoanDto loanDto = new LoanDto();
+    private RepaymentDto RepaymentDto = new RepaymentDto();
     [Parameter]
     public string? LoanId { get; set; }
     public string? UiMessage { get; set; } = "";
@@ -67,6 +68,7 @@ else
         RepaymentDto = new RepaymentDto();
         try
         {
+
             loanDto = await Http.GetFromJsonAsync<LoanDto>($"/api/Loans/{LoanId}");
         }
         catch (AccessTokenNotAvailableException exception)
@@ -81,6 +83,11 @@ else
 
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            RepaymentDto.UserId = userId;
+
             RepaymentDto.LoanId = loanDto.Id;
             var result = await Http.PostAsJsonAsync("/api/Repayments", RepaymentDto);
             UiMessage = "Income Added";

@@ -4,6 +4,7 @@
 @inject ILogger<AddIncome> Logger
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 <h3>Add Income</h3>
 
@@ -42,6 +43,10 @@
 
         try
         {
+                        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            IncomeDto.UserId = userId;
             var result = await Http.PostAsJsonAsync("/api/Incomes", IncomeDto);
             UiMessage = "Income Added";
             NavigationManager.NavigateTo("/incomes");
