@@ -5,10 +5,6 @@
 @using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
-@using Microsoft.Extensions.Configuration
-@inject Microsoft.Extensions.Configuration.IConfiguration configuration
-
-
 <PageTitle>Home</PageTitle>
 
 <h4>Dashboard</h4>
@@ -66,14 +62,11 @@ else
             <div class="card-body">
                 <p class="card-text">@DashboardDto.RepaymentsTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
             </div>
-            <div class="card-footer m-0">               
+            <div class="card-footer m-0">
                 <a href="repayments" class="card-link">View</a>
             </div>
         </div>
     </div>
-
-<p>DefaultConnection: @configuration.GetConnectionString("DefaultConnection")</p>
-<p>LocalSqlServer: @configuration.GetConnectionString("LocalSqlServer")</p>
 }
 @code {
     private DashboardDto? DashboardDto;
