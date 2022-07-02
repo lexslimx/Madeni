@@ -14,6 +14,11 @@
         <input asp-for="IncomeDto.Name" @bind="IncomeDto.Name" class="form-control" />
         <span asp-validation-for="IncomeDto.Name" class="text-danger"></span>
     </div>
+        <div class="form-group">
+        <label asp-for="IncomeDto.Date" class="control-label">Amount</label>
+        <input asp-for="IncomeDto.Date" type="date" @bind="IncomeDto.Date" class="form-control" />
+        <span asp-validation-for="IncomeDto.Date" class="text-danger"></span>
+    </div>
     <div class="form-group">
         <label asp-for="IncomeDto.Amount" class="control-label">Amount</label>
         <input asp-for="IncomeDto.Amount" @bind="IncomeDto.Amount" class="form-control" />

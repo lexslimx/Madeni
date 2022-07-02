@@ -12,6 +12,8 @@ namespace Madeni.Shared.Dtos
         public decimal ExpenseTotal { get; set; }
         public decimal LoanTotal { get; set; }
         public decimal RepaymentsTotal { get; set; }
+        public decimal Balance { get; set; }
     }
 }
+
 

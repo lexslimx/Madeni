@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Madeni.Shared;
 @using Madeni.Shared.Dtos
+@using System.Globalization
 @inject HttpClient Http
 @attribute [Authorize]
 
@@ -29,11 +30,14 @@ else
             @foreach (var repaymentDto in RepaymentDtos)
             {
                 <tr>
-                    <td>@repaymentDto.Amount</td>
+                    <td>@repaymentDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>
                     <td>@repaymentDto.Date</td>
                 </tr>
             }
         </tbody>
+        <tfoot>
+            Total : @RepaymentDtos.Sum(i => i.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))
+        </tfoot>
     </table>
 }
 

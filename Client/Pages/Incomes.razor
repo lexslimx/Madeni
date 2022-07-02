@@ -3,13 +3,14 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Madeni.Shared;
 @using Madeni.Shared.Dtos
+@using System.Globalization
 @inject HttpClient Http
 
 <PageTitle>My Income</PageTitle>
 
 <h1>My Income</h1>
 
-<p>This is a list of your incom sources.</p>
+<p>This is a list of your income sources.</p>
 
 @if (IncomeDtos == null)
 {
@@ -21,9 +22,8 @@ else
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Date</th>
                 <th>Amount</th>
-                <th>Type</th>
-                <th>Frequency</th>
             </tr>
         </thead>
         <tbody>
@@ -31,12 +31,14 @@ else
             {
                 <tr>
                     <td>@incomeDto.Name</td>
+                    <td>@incomeDto.Date.ToString("dd/MM/yyyy")</td>
                     <td>@incomeDto.Amount</td>
-                    <td>@incomeDto.Type</td>
-                    <td>@incomeDto.Frequency</td>
                 </tr>
             }
         </tbody>
+        <tfoot>
+            Total : @IncomeDtos.Sum(i => i.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))
+        </tfoot>
     </table>
 }
 

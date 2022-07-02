@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
+using System.Security.Claims;
 
 namespace Madeni.Server.Controllers
 {
@@ -30,8 +31,9 @@ namespace Madeni.Server.Controllers
           {
               return NotFound();
           }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var incomeDtos = new List<IncomeDto>();
-            foreach (var income in await _context.Incomes.ToListAsync())
+            foreach (var income in await _context.Incomes.Where(e=>e.UserId == userId).ToListAsync())
             {
                 var incomeDto = new IncomeDto
                 {
@@ -39,7 +41,7 @@ namespace Madeni.Server.Controllers
                     Amount = income.Amount,
                     Name = income.Name,
                     Frequency = income.Frequency.ToString(),
-                    Type = income.Type.ToString()
+                    Type = income.Type.ToString()                    
                 };
                 incomeDtos.Add(incomeDto);
             }
@@ -105,11 +107,13 @@ namespace Madeni.Server.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Incomes'  is null.");
           }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var income = new Income
             {
                 Name = incomeDto.Name,
                 Amount = incomeDto.Amount,
-                Frequency  = Models.Enums.IncomeFrequency.Monthly
+                Frequency  = Models.Enums.IncomeFrequency.Monthly,
+                UserId = userId
             };
 
             _context.Incomes.Add(income);
