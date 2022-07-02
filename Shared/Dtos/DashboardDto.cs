@@ -13,6 +13,7 @@ namespace Madeni.Shared.Dtos
         public decimal LoanTotal { get; set; }
         public decimal RepaymentsTotal { get; set; }
         public decimal Balance { get; set; }
+        public string? DefaultConnection { get; set; }
     }
 }
 
