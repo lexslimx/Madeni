@@ -12,10 +12,12 @@ namespace Madeni.Server.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public DashboardController(ApplicationDbContext context)
+        public DashboardController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         // GET: api/<DashboardController>
         [HttpGet]
@@ -32,6 +34,7 @@ namespace Madeni.Server.Controllers
                 ExpenseTotal = _context.Expenses.Where(i => i.UserId == userId).Sum(i => i.Amount),
                 LoanTotal = _context.Loans.Where(i => i.UserId == userId).Sum(i => i.Amount),
                 RepaymentsTotal = _context.Repayments.Where(i => i.UserId == userId).Sum(i => i.Amount),
+                DefaultConnection = _configuration.GetConnectionString("DefaultConnection")
             };
             dashboardDto.Balance = (dashboardDto.IncomeTotal - dashboardDto.ExpenseTotal);
 
