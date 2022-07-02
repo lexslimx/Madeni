@@ -31,7 +31,7 @@ namespace Madeni.Server.Controllers
           {
               return NotFound();
           }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var incomeDtos = new List<IncomeDto>();
             foreach (var income in await _context.Incomes.Where(e=>e.UserId == userId).ToListAsync())
             {
