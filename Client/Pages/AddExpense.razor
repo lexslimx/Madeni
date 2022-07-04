@@ -33,7 +33,7 @@
     public ExpenseDto ExpenseDto { get; set; } = new ExpenseDto();
     public string? UiMessage { get; set; } = "";
     private string? userId = "";
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
