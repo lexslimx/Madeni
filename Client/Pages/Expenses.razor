@@ -54,7 +54,7 @@ else
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
-            ExpenseDtos = await Http.GetFromJsonAsync<ExpenseDto[]>("/api/expenses?userId"+userId);
+            ExpenseDtos = await Http.GetFromJsonAsync<ExpenseDto[]>("/api/expenses?userId="+userId);
         }
         catch (AccessTokenNotAvailableException exception)
         {

@@ -32,9 +32,12 @@
 @code {
     public ExpenseDto ExpenseDto { get; set; } = new ExpenseDto();
     public string? UiMessage { get; set; } = "";
-
+    private string? userId = "";
     protected override void OnInitialized()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
         ExpenseDto = new ExpenseDto();
     }
     private async Task  HandleValidSubmit()
@@ -43,9 +46,6 @@
 
         try
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
             ExpenseDto.UserId = userId;
             var result = await Http.PostAsJsonAsync("/api/expenses", ExpenseDto);
             UiMessage = "Expense Added";
