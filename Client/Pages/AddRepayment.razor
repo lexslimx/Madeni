@@ -37,7 +37,7 @@ else
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="RepaymentDto.Date" class="control-label">Date</label>
-            <input asp-for="RepaymentDto.Date" @bind="RepaymentDto.Date" class="form-control" />
+            <input asp-for="RepaymentDto.Date" type="date" @bind="RepaymentDto.Date" class="form-control" />
             <span asp-validation-for="RepaymentDto.Date" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -65,7 +65,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        RepaymentDto = new RepaymentDto();
+        RepaymentDto = new RepaymentDto
+            {
+                Date = DateTime.Now
+            };
         try
         {
 
