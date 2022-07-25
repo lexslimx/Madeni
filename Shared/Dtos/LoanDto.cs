@@ -19,5 +19,7 @@ namespace Madeni.Shared.Dtos
         public DateTime ProspectiveDate { get; set; } = DateTime.Now;
         public List<RepaymentDto> Repayments { get; set; }
         public string UserId { get; set; }
+        public decimal? Balance { get; set; }
+        public decimal? TotalRepaid { get; set; }       
     }
 }

@@ -24,7 +24,9 @@ else
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Amount</th>               
+                <th>Amount</th>  
+                <th>Repaid</th>
+                <th>Balance</th>
                 <th>Start Date</th>
                 <th>Due Date</th>
                 <th>
@@ -36,7 +38,9 @@ else
             {
                 <tr>
                     <td>@loanDto.Name</td>
-                    <td>@loanDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>                    
+                    <td>@loanDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>     
+                    <td>@loanDto.TotalRepaid</td>
+                    <td>@loanDto.Balance</td>
                     <td>@loanDto.StartDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>@loanDto.ProspectiveDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>

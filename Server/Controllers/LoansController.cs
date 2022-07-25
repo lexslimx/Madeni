@@ -32,7 +32,7 @@ namespace Madeni.Server.Controllers
               return NotFound();
           }           
             var loanDtos = new List<LoanDto>();
-            foreach(var loan in await _context.Loans.Where(e=>e.UserId == userId).ToListAsync())
+            foreach(var loan in await _context.Loans.Include(l => l.Repayments).Where(e=>e.UserId == userId).ToListAsync())
             {
                 var loanDto = new LoanDto
                 {
@@ -40,7 +40,9 @@ namespace Madeni.Server.Controllers
                     Name = loan.Name,
                     Amount = loan.Amount,
                     ProspectiveDate = loan.ProspectiveDate,
-                    StartDate = loan.StartDate                   
+                    StartDate = loan.StartDate,
+                    TotalRepaid = loan.Repayments.Sum(r => r.Amount),
+                    Balance = loan.Amount - (loan.Repayments.Sum(r => r.Amount))
                 };
                 loanDtos.Add(loanDto);
             }

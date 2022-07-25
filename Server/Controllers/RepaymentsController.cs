@@ -127,6 +127,18 @@ namespace Madeni.Server.Controllers
                 UserId = repaymentDto.UserId
             };
             _context.Repayments.Add(repayment);
+
+
+            //create corresponding expense
+            var newExpense = new Expense
+            {
+                Amount = repayment.Amount,
+                Date = repayment.Date,
+                Name = "Loan Repayment",
+                UserId = repaymentDto.UserId
+            };
+            _context.Expenses.Add(newExpense);
+            
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRepayment", new { id = repayment.Id }, repaymentDto);
