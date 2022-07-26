@@ -26,6 +26,7 @@ else
                 <th>Name</th>
                 <th>Date</th>
                 <th>Amount</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,9 @@ else
                     <td>@ExpenseDto.Name</td>
                     <td>@ExpenseDto.Date.ToString("dd/MM/yyyy")</td>
                     <td>@ExpenseDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>
+                    <td>
+                        <button class="button btn-sm btn-outline-danger" @onclick="() => DeleteExpense(ExpenseDto)">delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -45,20 +49,32 @@ else
 }
 
 @code {
-    private ExpenseDto[]? ExpenseDtos;
-
+    private List<ExpenseDto>? ExpenseDtos = new List<ExpenseDto>();
+    string userId = string.Empty;
     protected override async Task OnInitializedAsync()
     {
+
         try
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
-            ExpenseDtos = await Http.GetFromJsonAsync<ExpenseDto[]>("/api/expenses?userId="+userId);
+            userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            ExpenseDtos = await LoadExpenses(userId);
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
+    }
+
+    private async Task DeleteExpense(ExpenseDto item)
+    {
+        await Http.DeleteAsync("/api/expenses/" + item.Id, new CancellationToken());
+        ExpenseDtos = await LoadExpenses(userId);
+    }
+
+    private async Task<List<ExpenseDto>?> LoadExpenses(string userId)
+    {
+        return await Http.GetFromJsonAsync<List<ExpenseDto>>("/api/expenses?userId=" + userId);
     }
 }
