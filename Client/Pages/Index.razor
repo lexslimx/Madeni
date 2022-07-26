@@ -6,6 +6,10 @@
 @inject HttpClient Http
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@using ChartJs.Blazor.PieChart
+@using ChartJs.Blazor.BarChart
+@using System.Drawing
+@using Madeni.Client.Shared
 <PageTitle>Home</PageTitle>
 
 <h4>Overview</h4>
@@ -17,7 +21,7 @@
 else
 {
     <div class="row">
-       <small>You have earned KES @DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) and spent KES @DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) so far, damn!</small> 
+        <small>You have earned KES @DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) and spent KES @DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) so far, damn!</small>
     </div>
     <div class="row">
         <div class="card col-md-3 border-success">
@@ -27,15 +31,15 @@ else
             <div class="card-body">
                 <p class="card-text">@DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
                 <h6 class="card-subtitle mb-2 text-muted">Balance: @DashboardDto.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
-                 <small>Incomes</small>
-                 
+                <small>Incomes</small>
+
             </div>
             <div class="card-footer">
                 <a href="addincome" class="btn-outline-dark btn-sm">
                     <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
                 </a>
                 <a href="incomes" class="btn-outline-dark btn-sm">
-                   <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                    <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
                 </a>
             </div>
         </div>
@@ -90,10 +94,22 @@ else
             </div>
         </div>
     </div>
-    //https://github.com/mariusmuntean/ChartJs.Blazor
+    <div class="row">
+        <div class="col-md-4">
+            <Chart Config="_config"></Chart>
+        </div>
+        <div class="col-md-8" style="max-height:150px">
+            <Chart Config="_configBar" @ref="_chart"></Chart>
+        </div>
+    </div>
 }
 @code {
+    private PieConfig _config;
     private DashboardDto? DashboardDto;
+    private const int InitalCount = 12;
+
+    private BarConfig _configBar;
+    private Chart _chart;
     protected override async Task OnInitializedAsync()
     {
         try
@@ -107,6 +123,111 @@ else
         {
             exception.Redirect();
         }
+
+        initBarChart();
+        InitPieChart();
+    }
+
+    private void InitPieChart()
+    {
+        _config = new PieConfig
+            {
+                Options = new PieOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Cashflow distribution"
+                    }
+                }
+            };
+
+        foreach (string color in new[] { "Loans", "Expenses", "Income", "Repayments" })
+        {
+            _config.Data.Labels.Add(color);
+        }
+
+        PieDataset<decimal> dataset = new PieDataset<decimal>(new[] { @DashboardDto.LoanTotal, @DashboardDto.ExpenseTotal, @DashboardDto.IncomeTotal, @DashboardDto.RepaymentsTotal })
+            {
+                BackgroundColor = new[]
+                                        {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+        }
+            };
+
+        _config.Data.Datasets.Add(dataset);
+    }
+
+    private void initBarChart()
+    {
+        _configBar = new BarConfig
+            {
+                Options = new BarOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Breakdown"
+                    },
+                    Tooltips = new Tooltips
+                    {
+                        Mode = InteractionMode.Index,
+                        Intersect = false
+                    },
+                    Scales = new BarScales
+                    {
+                        XAxes = new List<CartesianAxis>
+                    {
+                        new ChartJs.Blazor.BarChart.Axes.BarCategoryAxis
+                        {
+                            Stacked = true
+                        }
+                    },
+                        YAxes = new List<CartesianAxis>
+                    {
+                        new ChartJs.Blazor.BarChart.Axes.BarLinearCartesianAxis
+                        {
+                            Stacked = true
+                        }
+                    }
+                    }
+                }
+            };
+
+        IDataset<int> dataset1 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+            {
+                Label = "Income",
+                BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Green)
+            };
+
+        IDataset<int> dataset2 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+            {
+                Label = "Expenses",
+                BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Yellow)
+            };
+
+        IDataset<int> dataset3 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+            {
+                Label = "Loans",
+                BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Red)
+            };
+
+        IDataset<int> dataset4 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+            {
+                Label = "Repayments",
+                BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Blue)
+            };
+
+        _configBar.Data.Labels.AddRange(Madeni.Client.Shared.SampleUtils.Months.Take(InitalCount));
+        _configBar.Data.Datasets.Add(dataset1);
+        _configBar.Data.Datasets.Add(dataset2);
+        _configBar.Data.Datasets.Add(dataset3);
+        _configBar.Data.Datasets.Add(dataset4);
     }
 }
 
