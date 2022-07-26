@@ -35,7 +35,7 @@ namespace Madeni.Server.Controllers
             var dashboardDto = new DashboardDto
             {
                 IncomeTotal = _context.Incomes.Where(e=>e.UserId==userId).Sum(i => i.Amount),
-                ExpenseTotal = _context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                ExpenseTotal = _context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount),
                 LoanTotal = _context.Loans.Where(e => e.UserId == userId).Sum(i => i.Amount),
                 RepaymentsTotal = _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount)                
             };
