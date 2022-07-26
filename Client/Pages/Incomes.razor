@@ -7,11 +7,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient Http
 
-<PageTitle>My Income</PageTitle>
+<PageTitle>Incomes</PageTitle>
 
-<h1>My Income</h1>
-
-<p>This is a list of your income sources.</p>
+<h4>Incomes</h4>
 
 @if (IncomeDtos == null)
 {
@@ -19,6 +17,13 @@
 }
 else
 {
+    <div class="row">
+        <div class="col-md-1">
+            <a href="addincome" class="btn-outline-dark btn-sm">
+                <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>

@@ -8,11 +8,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
-<PageTitle>My Repayments</PageTitle>
+<PageTitle>Repayments</PageTitle>
 
-<h1>My Repayments</h1>
-
-<p>This is a list of all your Repayments.</p>
+<h4>Repayments</h4>
 
 @if (RepaymentDtos == null)
 {
@@ -20,6 +18,13 @@
 }
 else
 {
+    <div class="row">
+        <div class="col-md-1">
+            <a href="addrepayment" class="btn-outline-dark btn-sm">
+                <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>

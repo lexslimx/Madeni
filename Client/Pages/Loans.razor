@@ -8,11 +8,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
-<PageTitle>My Loans</PageTitle>
+<PageTitle>Loans</PageTitle>
 
-<h1>My Loans</h1>
-
-<p>This is a list of all your loans.</p>
+<h4>Loans</h4>
 
 @if (LoanDtos == null)
 {
@@ -20,11 +18,18 @@
 }
 else
 {
+    <div class="row">
+        <div class="col-md-1">
+            <a href="addloan" class="btn-outline-dark btn-sm">
+                <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Amount</th>  
+                <th>Amount</th>
                 <th>Repaid</th>
                 <th>Balance</th>
                 <th>Start Date</th>
@@ -38,7 +43,7 @@ else
             {
                 <tr>
                     <td>@loanDto.Name</td>
-                    <td>@loanDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>     
+                    <td>@loanDto.Amount.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</td>
                     <td>@loanDto.TotalRepaid</td>
                     <td>@loanDto.Balance</td>
                     <td>@loanDto.StartDate.Date.ToString("dd/MM/yyyy")</td>
@@ -50,7 +55,7 @@ else
             }
         </tbody>
         <tfoot>
-            Total : @LoanDtos.Sum(e=>e.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) 
+            Total : @LoanDtos.Sum(e=>e.Amount).ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))
         </tfoot>
     </table>
 }
