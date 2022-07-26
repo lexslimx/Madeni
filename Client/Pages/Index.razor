@@ -8,7 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 <PageTitle>Home</PageTitle>
 
-<h4>Dashboard</h4>
+<h4>Overview</h4>
 
 @if (DashboardDto == null)
 {
@@ -17,54 +17,61 @@
 else
 {
     <div class="row">
-        <div class="card col-md-3">
+       <small>You have earned KES @DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) and spent KES @DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) so far, damn!</small> 
+    </div>
+    <div class="row">
+        <div class="card col-md-3 border-success">
             <div class="card-title">
-                <h5 class="card-title">Income</h5>
+                <h5 class="card-title"></h5>
             </div>
             <div class="card-body">
                 <p class="card-text">@DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
                 <h6 class="card-subtitle mb-2 text-muted">Balance: @DashboardDto.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
+                 <small>Incomes</small>
             </div>
-            <div class="card-footer">
-                <a href="addincome" class="card-link">Add</a>
-                <a href="incomes" class="card-link">View</a>
+            <div class="card-footer bg-white">
+                <a href="addincome" class="btn-outline-dark btn-sm">Add</a>
+                <a href="incomes" class="btn-outline-dark btn-sm">View</a>               
             </div>
         </div>
-        <div class="card col-md-3">
+        <div class="card col-md-3 border-dark">
             <div class="card-title">
-                <h5 class="card-title">Expenses</h5>
+                <h5 class="card-title"></h5>
             </div>
             <div class="card-body">
                 <p class="card-text">@DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+                <small>Expenses</small>
             </div>
-            <div class="card-footer">
-                <a href="addexpense" class="card-link">Add</a>
-                <a href="expenses" class="card-link">View</a>
+            <div class="card-footer bg-white">
+                <a href="addexpense" class="btn-outline-dark btn-sm">Add</a>
+                <a href="expenses" class="btn-outline-dark btn-sm">View</a>
             </div>
         </div>
-        <div class="card col-md-3">
+        <div class="card col-md-3 border-warning">
             <div class="card-title">
-                <h5 class="card-title">Loans</h5>
+                <h5 class="card-title"></h5>
             </div>
             <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-muted"></h6>
                 <p class="card-text">@DashboardDto.LoanTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
                 <h6 class="card-subtitle mb-2 text-muted">Outstanding: @((DashboardDto.LoanTotal - DashboardDto.RepaymentsTotal).ToString("C", CultureInfo.CreateSpecificCulture("en-KE")))</h6>
+                <small>Loans</small>
             </div>
-            <div class="card-footer">
-                <a href="addloan" class="card-link">Add</a>
-                <a href="loans" class="card-link">View</a>
+            <div class="card-footer bg-white">
+                <a href="addloan" class="btn-outline-dark btn-sm">Add</a>
+                <a href="loans" class="btn-outline-dark btn-sm">View</a>
             </div>
         </div>
-        <div class="card col-md-3">
+        <div class="card col-md-3 border-info">
             <div class="card-title">
-                <h5 class="card-title">Repayments</h5>
+                <h5 class="card-title"></h5>
             </div>
             <div class="card-body">
                 <p class="card-text">@DashboardDto.RepaymentsTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+                <small>Repayments</small>
             </div>
-            <div class="card-footer m-0">
-                <a href="repayments" class="card-link">View</a>
+            <div class="card-footer m-0 bg-white">
+                <a href="repayments" class="btn-outline-dark btn-sm">View</a>
             </div>
         </div>
     </div>
