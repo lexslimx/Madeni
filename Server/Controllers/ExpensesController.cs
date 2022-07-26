@@ -38,6 +38,7 @@ namespace Madeni.Server.Controllers
                 {
                     Id = expense.Id,
                     Name = expense.Name,
+                    Date = expense.Date,
                     Amount = expense.Amount
                 };
                 ExpenseDtos.Add(expenseDto);
@@ -108,6 +109,7 @@ namespace Madeni.Server.Controllers
             {                
                 Name = expenseDto.Name,
                 Amount = expenseDto.Amount,
+                Date = expenseDto.Date,
                 UserId = userId
             };
             _context.Expenses.Add(expense);
