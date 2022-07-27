@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
-using System.Security.Claims;
 
 namespace Madeni.Server.Controllers
 {
@@ -103,14 +97,13 @@ namespace Madeni.Server.Controllers
           if (_context.Expenses == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Expense'  is null.");
-          }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+          }            
             var expense = new Expense
             {                
                 Name = expenseDto.Name,
                 Amount = expenseDto.Amount,
                 Date = expenseDto.Date,
-                UserId = userId
+                UserId = expenseDto.UserId
             };
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
