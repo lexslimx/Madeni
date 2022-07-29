@@ -24,7 +24,7 @@ else
         <small>You have earned KES @DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) and spent KES @DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) so far, damn!</small>
     </div>
     <div class="row">
-        <div class="card col-md-3 border-success">
+        <div class="card col border-success">
             <div class="card-title">
                 <h5 class="card-title"></h5>
             </div>
@@ -43,7 +43,7 @@ else
                 </a>
             </div>
         </div>
-        <div class="card col-md-3 border-dark">
+        <div class="card col border-dark">
             <div class="card-title">
                 <h5 class="card-title"></h5>
             </div>
@@ -60,7 +60,7 @@ else
                 </a>
             </div>
         </div>
-        <div class="card col-md-3 border-warning">
+        <div class="card col border-warning">
             <div class="card-title">
                 <h5 class="card-title"></h5>
             </div>
@@ -79,7 +79,7 @@ else
                 </a>
             </div>
         </div>
-        <div class="card col-md-3 border-info">
+        <div class="card col border-info">
             <div class="card-title">
                 <h5 class="card-title"></h5>
             </div>
@@ -93,13 +93,14 @@ else
                 </a>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+        <div class="card col border-info">
             <Chart Config="_config"></Chart>
         </div>
-        <div class="col-md-8" style="max-height:150px">
-            <Chart Config="_configBar" @ref="_chart"></Chart>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+            <Chart Config="_configBar" Height="90" @ref="_chart"></Chart>
         </div>
     </div>
 }
@@ -138,7 +139,11 @@ else
                     Title = new OptionsTitle
                     {
                         Display = true,
-                        Text = "Cashflow distribution"
+                        Text = "",
+                    },
+                    Legend = new Legend
+                    {
+                        Display = false
                     }
                 }
             };
@@ -151,7 +156,7 @@ else
         PieDataset<decimal> dataset = new PieDataset<decimal>(new[] { @DashboardDto.LoanTotal, @DashboardDto.ExpenseTotal, @DashboardDto.IncomeTotal, @DashboardDto.RepaymentsTotal })
             {
                 BackgroundColor = new[]
-                                        {
+                                                {
             ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
             ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
             ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
@@ -185,14 +190,14 @@ else
                     {
                         new ChartJs.Blazor.BarChart.Axes.BarCategoryAxis
                         {
-                            Stacked = true
+                            Stacked = false
                         }
                     },
                         YAxes = new List<CartesianAxis>
                     {
                         new ChartJs.Blazor.BarChart.Axes.BarLinearCartesianAxis
                         {
-                            Stacked = true
+                            Stacked = false
                         }
                     }
                     }
@@ -230,5 +235,3 @@ else
         _configBar.Data.Datasets.Add(dataset4);
     }
 }
-
-
