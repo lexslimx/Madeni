@@ -10,7 +10,7 @@ namespace Madeni.Shared.Dtos
     {
         public LoanDto()
         {
-            Repayments = new List<RepaymentDto>();
+            Repayments = new List<RepaymentDto>();            
         }
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -18,8 +18,8 @@ namespace Madeni.Shared.Dtos
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime ProspectiveDate { get; set; } = DateTime.Now;
         public List<RepaymentDto> Repayments { get; set; }
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public decimal? Balance { get; set; }
-        public decimal? TotalRepaid { get; set; }       
+        public decimal? TotalRepaid { get; set; }        
     }
 }

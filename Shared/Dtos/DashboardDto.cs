@@ -8,14 +8,12 @@ namespace Madeni.Shared.Dtos
 {
     public class DashboardDto
     {
-        public decimal IncomeTotal { get; set; }
-        public decimal ExpenseTotal { get; set; }
-        public decimal LoanTotal { get; set; }
-        public decimal RepaymentsTotal { get; set; }
-        public decimal Balance { get; set; }
-        public string? DefaultConnection { get; set; }
+        public DashboardDto()
+        {
+            DashboardWidgets = new();
+            UserId = string.Empty;
+        }
         public string? UserId { get; set; }
+        public List<DashboardWidget> DashboardWidgets { get; set; }
     }
 }
-
-
