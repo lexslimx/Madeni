@@ -21,84 +21,34 @@
 else
 {
     <div class="row">
-        <small>You have earned KES @DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) and spent KES @DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE")) so far, damn!</small>
-    </div>
-    <div class="row">
-        <div class="card col border-success">
-            <div class="card-title">
-                <h5 class="card-title"></h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">@DashboardDto.IncomeTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
-                <h6 class="card-subtitle mb-2 text-muted">Balance: @DashboardDto.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
-                <small>Incomes</small>
+        @foreach (var widget in @DashboardDto.DashboardWidgets.OrderBy(w => w.DisplayOrder))
+        {
+            <div class="card col-md-2 border-success">
+                <div class="card-title">
+                    <h5 class="card-title">@widget.Title</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@widget.Total.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
+                    <h6 class="card-subtitle mb-2 text-muted">Balance: @widget.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
+                    <small>@widget.Title</small>
 
+                </div>
+                <div class="card-footer">
+                    <a href="addincome" class="btn-outline-dark btn-sm">
+                        <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+                    </a>
+                    <a href="incomes" class="btn-outline-dark btn-sm">
+                        <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                    </a>
+                </div>
             </div>
-            <div class="card-footer">
-                <a href="addincome" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
-                </a>
-                <a href="incomes" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="card col border-dark">
-            <div class="card-title">
-                <h5 class="card-title"></h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">@DashboardDto.ExpenseTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
-                <small>Expenses</small>
-            </div>
-            <div class="card-footer bg-white">
-                <a href="addexpense" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
-                </a>
-                <a href="expenses" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="card col border-warning">
-            <div class="card-title">
-                <h5 class="card-title"></h5>
-            </div>
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <p class="card-text">@DashboardDto.LoanTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
-                <h6 class="card-subtitle mb-2 text-muted">Outstanding: @((DashboardDto.LoanTotal - DashboardDto.RepaymentsTotal).ToString("C", CultureInfo.CreateSpecificCulture("en-KE")))</h6>
-                <small>Loans</small>
-            </div>
-            <div class="card-footer bg-white">
-                <a href="addloan" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
-                </a>
-                <a href="loans" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="card col border-info">
-            <div class="card-title">
-                <h5 class="card-title"></h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">@DashboardDto.RepaymentsTotal.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
-                <small>Repayments</small>
-            </div>
-            <div class="card-footer m-0 bg-white">
-                <a href="repayments" class="btn-outline-dark btn-sm">
-                    <span class="oi oi-list text-success" title="add" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="card col border-info">
+        }
+        <div class="card col-md-4 border-info">
             <Chart Config="_config"></Chart>
         </div>
     </div>
-    <div class="row">
 
+    <div class="row">
         <div class="col-md-12">
             <Chart Config="_configBar" Height="90" @ref="_chart"></Chart>
         </div>
@@ -106,7 +56,7 @@ else
 }
 @code {
     private PieConfig _config;
-    private DashboardDto? DashboardDto;
+    private DashboardDto? DashboardDto = null;
     private const int InitalCount = 12;
 
     private BarConfig _configBar;
@@ -148,20 +98,20 @@ else
                 }
             };
 
-        foreach (string color in new[] { "Loans", "Expenses", "Income", "Repayments" })
+        foreach (string color in DashboardDto.DashboardWidgets.Select(w => w.Title))
         {
             _config.Data.Labels.Add(color);
         }
 
-        PieDataset<decimal> dataset = new PieDataset<decimal>(new[] { @DashboardDto.LoanTotal, @DashboardDto.ExpenseTotal, @DashboardDto.IncomeTotal, @DashboardDto.RepaymentsTotal })
+        PieDataset<decimal> dataset = new PieDataset<decimal>(@DashboardDto.DashboardWidgets.Select(w => w.Total).ToArray())
             {
                 BackgroundColor = new[]
-                                                {
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
-        }
+                                                                    {
+                ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+                ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+                ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+                ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+            }
             };
 
         _config.Data.Datasets.Add(dataset);
@@ -204,7 +154,7 @@ else
                 }
             };
 
-        IDataset<int> dataset1 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+        IDataset<int> dataset1 = new BarDataset<int>(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })
             {
                 Label = "Income",
                 BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Green)

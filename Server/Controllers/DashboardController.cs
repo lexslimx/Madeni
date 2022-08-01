@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace Madeni.Server.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
     public class DashboardController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -27,20 +27,49 @@ namespace Madeni.Server.Controllers
         // GET: api/<DashboardController>
         [HttpGet]
         public DashboardDto GetAsync(string userId)
-        {             
+        {
             if (String.IsNullOrEmpty(userId))
             {
-                return new DashboardDto();                
+                return new DashboardDto();
             }
             var dashboardDto = new DashboardDto
-            {
-                IncomeTotal = _context.Incomes.Where(e=>e.UserId==userId).Sum(i => i.Amount),
-                ExpenseTotal = _context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount),
-                LoanTotal = _context.Loans.Where(e => e.UserId == userId).Sum(i => i.Amount),
-                RepaymentsTotal = _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount)                
+            {           
+                DashboardWidgets = new List<DashboardWidget>()
             };
-            dashboardDto.Balance = (dashboardDto.IncomeTotal - dashboardDto.ExpenseTotal);
+            dashboardDto.DashboardWidgets.Add(new DashboardWidget
+            {
+                DisplayOrder = 2,   
+                WidgetType = Shared.WidgetType.Loans,
+                Total = _context.Loans.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                Title = Shared.WidgetType.Loans.ToString()
+            });
+
+            dashboardDto.DashboardWidgets.Add(new DashboardWidget
+            {
+                DisplayOrder = 1,
+                WidgetType = Shared.WidgetType.Expenses,
+                Total = _context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                Title = Shared.WidgetType.Expenses.ToString()
+            });
+
+            dashboardDto.DashboardWidgets.Add(new DashboardWidget
+            {
+                DisplayOrder = 0,
+                WidgetType = Shared.WidgetType.Incomes,
+                Total = _context.Incomes.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                Title = Shared.WidgetType.Incomes.ToString(),
+                Balance = (_context.Incomes.Where(e => e.UserId == userId).Sum(i => i.Amount)) - (_context.Expenses.Where(e => e.UserId == userId).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount))
+            });
+
+            dashboardDto.DashboardWidgets.Add(new DashboardWidget
+            {
+                DisplayOrder = 3,
+                WidgetType = Shared.WidgetType.Repayments,
+                Total = _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                Title = Shared.WidgetType.Repayments.ToString()
+            });
+           
             return dashboardDto;
-        }
+        }   
     }
 }
