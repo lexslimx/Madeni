@@ -34,13 +34,46 @@ else
 
                 </div>
                 <div class="card-footer">
-                    <a href="addincome" class="btn-outline-dark btn-sm">
-                        <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
-                    </a>
-                    <a href="incomes" class="btn-outline-dark btn-sm">
-                        <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
-                    </a>
-                </div>
+     
+                @switch (@widget.WidgetType)
+                {
+                    case Madeni.Shared.WidgetType.Loans:
+
+                        <a href="addloan" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+                        </a>
+                        <a href="loans" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                        </a>
+                        break;
+                    case Madeni.Shared.WidgetType.Expenses:
+
+                        <a href="addexpense" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+                        </a>
+                        <a href="expenses" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                        </a>
+                        break;
+                    case Madeni.Shared.WidgetType.Incomes:
+
+                        <a href="addincome" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-plus text-success" title="add" aria-hidden="true"></span>
+                        </a>
+                        <a href="incomes" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                        </a>
+                        break;
+                    case Madeni.Shared.WidgetType.Repayments:
+                        <a href="repayments" class="btn-outline-dark btn-sm">
+                            <span class="oi oi-list text-success" title="view" aria-hidden="true"></span>
+                        </a>
+                        break;
+                    default:                        
+                        break;
+                }
+                           </div>
+
             </div>
         }
         <div class="card col-md-4 border-info">
@@ -106,7 +139,7 @@ else
         PieDataset<decimal> dataset = new PieDataset<decimal>(@DashboardDto.DashboardWidgets.Select(w => w.Total).ToArray())
             {
                 BackgroundColor = new[]
-                                                                    {
+                                                                        {
                 ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
                 ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
                 ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
