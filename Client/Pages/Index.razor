@@ -27,11 +27,12 @@ else
                 <div class="card-title">
                     <h5 class="card-title"></h5>
                 </div>
+                <div class="card-header">      
+                    @widget.Title
+                </div>
                 <div class="card-body">
                     <p class="card-text">@widget.Total.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</p>
                     <h6 class="card-subtitle mb-2 text-muted">Balance: @widget.Balance.ToString("C", CultureInfo.CreateSpecificCulture("en-KE"))</h6>
-                    <small>@widget.Title</small>
-
                 </div>
                 <div class="card-footer">
      

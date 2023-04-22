@@ -1,9 +1,11 @@
 ﻿using Madeni.Server.Data;
+using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -33,14 +35,15 @@ namespace Madeni.Server.Controllers
                 return new DashboardDto();
             }
             var dashboardDto = new DashboardDto
-            {           
+            {
                 DashboardWidgets = new List<DashboardWidget>()
             };
             dashboardDto.DashboardWidgets.Add(new DashboardWidget
             {
-                DisplayOrder = 2,   
+                DisplayOrder = 2,
                 WidgetType = Shared.WidgetType.Loans,
-                Total = _context.Loans.Where(e => e.UserId == userId).Sum(i => i.Amount),
+                Total = _context.Loans.Where(e => e.UserId == userId).Sum(f => f.Amount),
+                Balance = GetLoansBalance(_context.Loans.Where(e => e.UserId == userId).Include(e => e.Repayments)),
                 Title = Shared.WidgetType.Loans.ToString()
             });
 
@@ -68,8 +71,19 @@ namespace Madeni.Server.Controllers
                 Total = _context.Repayments.Where(e => e.UserId == userId).Sum(i => i.Amount),
                 Title = Shared.WidgetType.Repayments.ToString()
             });
-           
+
             return dashboardDto;
-        }   
+        }
+
+        private decimal GetLoansBalance(IQueryable<Loan> loans)
+        {
+            decimal loanBalance = 0;
+            foreach (Loan loan in loans)
+            {
+                var repaidAmount = loan.Repayments.Sum(e => e.Amount);
+                loanBalance += loan.Amount - repaidAmount;
+            }
+            return loanBalance;
+        }
     }
 }
