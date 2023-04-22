@@ -39,6 +39,7 @@ namespace Madeni.Server.Controllers
                     Id = income.Id,
                     Amount = income.Amount,
                     Name = income.Name,
+                    Date = income.Date,
                     Frequency = income.Frequency.ToString(),
                     Type = income.Type.ToString()
                 };
@@ -110,6 +111,7 @@ namespace Madeni.Server.Controllers
             {
                 Name = incomeDto.Name,
                 Amount = incomeDto.Amount,
+                Date = incomeDto.Date,
                 Frequency = Models.Enums.IncomeFrequency.Monthly,
                 UserId = incomeDto.UserId
             };

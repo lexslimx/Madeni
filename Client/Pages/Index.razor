@@ -187,26 +187,26 @@ else
                     }
                 }
             };
-
-        IDataset<int> dataset1 = new BarDataset<int>(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })
+        //TO DO Can I do a API call here for each?
+        IDataset<decimal> dataset1 = new BarDataset<decimal>(DashboardDto.ChartData.Where(e => e.WidgetType == Madeni.Shared.WidgetType.Incomes).Select(f => f.Total).ToList())
             {
                 Label = "Income",
                 BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Green)
             };
 
-        IDataset<int> dataset2 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+        IDataset<decimal> dataset2 = new BarDataset<decimal>(DashboardDto.ChartData.Where(e => e.WidgetType == Madeni.Shared.WidgetType.Expenses).Select(f => f.Total).ToList())
             {
                 Label = "Expenses",
                 BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Yellow)
             };
 
-        IDataset<int> dataset3 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+        IDataset<decimal> dataset3 = new BarDataset<decimal>(DashboardDto.ChartData.Where(e => e.WidgetType == Madeni.Shared.WidgetType.Loans).Select(f => f.Total).ToList())
             {
                 Label = "Loans",
                 BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Red)
             };
 
-        IDataset<int> dataset4 = new BarDataset<int>(Madeni.Client.Shared.SampleUtils.RandomScalingFactor(InitalCount))
+        IDataset<decimal> dataset4 = new BarDataset<decimal>(DashboardDto.ChartData.Where(e => e.WidgetType == Madeni.Shared.WidgetType.Repayments).Select(f => f.Total).ToList())
             {
                 Label = "Repayments",
                 BackgroundColor = ColorUtil.FromDrawingColor(Madeni.Client.Shared.SampleUtils.ChartColors.Blue)
