@@ -12,8 +12,10 @@ namespace Madeni.Shared.Dtos
         {
             DashboardWidgets = new();
             UserId = string.Empty;
+            ChartData = new List<DashboardWidget>();
         }
         public string? UserId { get; set; }
         public List<DashboardWidget> DashboardWidgets { get; set; }
+        public List<DashboardWidget> ChartData { get; set; }
     }
 }
