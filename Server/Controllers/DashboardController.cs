@@ -70,11 +70,9 @@ namespace Madeni.Server.Controllers
         private List<DashboardWidget>GetChartData(string userId, int? year)
         {
             var ChartData = new List<DashboardWidget>();
-            int index = 0;
-            for(int month = 1; month <= 12; month++)
+            for(int month = 1; month <= DateTime.Now.Month; month++)
             {
-                ChartData = GetWidgetData(userId, year, month);
-                index++;
+                ChartData.AddRange(GetWidgetData(userId, year, month));
             }
 
             return ChartData;
@@ -83,7 +81,7 @@ namespace Madeni.Server.Controllers
         private List<DashboardWidget> GetWidgetData(string userId, int? year, int? month)
         {
             if (year == null) year = DateTime.Now.Year;
-            if (month == null) month = 12;
+            if (month == null) month = DateTime.Now.Month;
 
             if (String.IsNullOrEmpty(userId))
             {
