@@ -17,5 +17,7 @@ namespace Madeni.Server.Data
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Repayment> Repayments { get; set; }
+        public DbSet<Goal> Goals { get; set; }
+        public DbSet<Investment> Investments { get; set; }
     }
 }
