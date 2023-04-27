@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Madeni.Server.Data
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {
         public ApplicationDbContext(
             DbContextOptions options,
