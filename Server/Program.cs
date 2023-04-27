@@ -34,6 +34,7 @@ builder.Services.AddHttpContextAccessor();
 
 var config = new MapperConfiguration(cfg => {
     cfg.AddProfile<GoalProfile>();
+    cfg.AddProfile<InvestmentProfile>();
 });
 
 var mapper = config.CreateMapper();
@@ -42,6 +43,7 @@ builder.Services.AddSingleton<IMapper>(mapper);
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IGoalsService, GoalsService>();
+builder.Services.AddScoped<IInvestmentService, InvestmentService>();
  
 var app = builder.Build();
 
