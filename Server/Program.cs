@@ -1,6 +1,7 @@
 using AutoMapper;
 using IdentityModel;
 using Madeni.Server.Data;
+using Madeni.Server.Mapping;
 using Madeni.Server.Models;
 using Madeni.Server.Repository;
 using Madeni.Server.Services;
@@ -31,13 +32,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+var config = new MapperConfiguration(cfg => {
+    cfg.AddProfile<GoalProfile>();
+});
+
+var mapper = config.CreateMapper();
+
+builder.Services.AddSingleton<IMapper>(mapper);
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IGoalsService, GoalsService>();
-
  
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

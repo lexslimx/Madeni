@@ -1,4 +1,5 @@
-﻿using ChartJs.Blazor.Common;
+﻿using AutoMapper;
+using ChartJs.Blazor.Common;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
@@ -17,15 +18,17 @@ namespace Madeni.Server.Controllers
     [ApiController]
     public class DashboardController : ControllerBase
     {
+        private readonly IMapper mapper;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DashboardController(ApplicationDbContext context, IConfiguration configuration, IHttpContextAccessor HttpContextAccessor)
+        public DashboardController(ApplicationDbContext context, IConfiguration configuration, IHttpContextAccessor HttpContextAccessor, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
             _httpContextAccessor = HttpContextAccessor;
+            this.mapper = mapper;
         }
         // GET: api/<DashboardController>
         [HttpGet]
