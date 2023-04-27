@@ -1,6 +1,70 @@
-﻿@page "/addgoal"
-<h3>AddGoal</h3>
+﻿@page "/AddGoal"
+@using Madeni.Shared.Dtos
+@using Microsoft.AspNetCore.Authorization
+@inject ILogger<AddGoal> Logger
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+<h4>AddGoal</h4>
 
+<EditForm Model="@GoalDto" OnValidSubmit="@HandleValidSubmit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="GoalDto.Name" class="control-label">Name</label>
+        <input asp-for="GoalDto.Name" @bind="GoalDto.Name" class="form-control" />
+        <span asp-validation-for="GoalDto.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GoalDto.Amount" class="control-label">Amount</label>
+        <input asp-for="GoalDto.Amount" @bind="GoalDto.Amount" class="form-control" />
+        <span asp-validation-for="GoalDto.Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GoalDto.Description" class="control-label">Description</label>
+        <input asp-for="GoalDto.Description" @bind="GoalDto.Description" class="form-control" />
+        <span asp-validation-for="GoalDto.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GoalDto.StartDate" class="control-label">Start Date</label>
+        <input asp-for="GoalDto.StartDate" type="date" @bind="GoalDto.StartDate" class="form-control" />
+        <span asp-validation-for="GoalDto.StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GoalDto.TargetDate" class="control-label">Target Date</label>
+        <input asp-for="GoalDto.TargetDate" type="date" @bind="GoalDto.TargetDate" class="form-control" />
+        <span asp-validation-for="GoalDto.TargetDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm>
 @code {
+    public GoalDto? GoalDto { get; set; }
+    public string? UiMessage { get; set; } = "";
 
+    protected override void OnInitialized()
+    {
+        GoalDto = new GoalDto();
+    }
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            GoalDto.UserId = userId;
+            GoalDto.Id = Guid.NewGuid();
+            var result = await Http.PostAsJsonAsync("/api/Goals", GoalDto);
+            UiMessage = "Goal Added";
+            NavigationManager.NavigateTo("/Goals");
+        }
+        catch (Exception exception)
+        {
+            UiMessage = exception.Message;
+        }
+    }
 }
