@@ -1,6 +1,13 @@
+using AutoMapper;
+using IdentityModel;
 using Madeni.Server.Data;
 using Madeni.Server.Models;
+using Madeni.Server.Repository;
+using Madeni.Server.Services;
+using Madeni.Shared.Dtos;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +30,13 @@ builder.Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<IGoalsService, GoalsService>();
+
+ 
 
 var app = builder.Build();
 

@@ -1,49 +1,33 @@
-﻿using Madeni.Server.Data;
+﻿using AutoMapper;
+using IdentityModel;
+using Madeni.Server.Data;
 using Madeni.Server.Models;
+using Madeni.Server.Repository;
 using Madeni.Shared.Dtos;
 
 namespace Madeni.Server.Services
 {
-    public class GoalsService
+    public class GoalsService : IGoalsService
     {
-        private readonly ApplicationDbContext _context;
-        public GoalsService(ApplicationDbContext context)
+        private readonly IRepository<Goal, GoalDto> _repository;
+        private readonly IMapper _mapper;
+        public GoalsService(IRepository<Goal, GoalDto> repository, IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public IEnumerable<GoalDto> GetGoals(string userId)
         {
-            var goals = _context.Goals.Where(e => e.UserId == userId).ToList();
-            List<GoalDto> results = new List<GoalDto>();
-            foreach (var goal in goals)
-            {
-                results.Add(new GoalDto
-                {
-                    Id = goal.Id,
-                    Description = goal.Description, 
-                    Name = goal.Name,
-                    StartDate = goal.StartDate,
-                    TargetDate = goal.TargetDate
-                });
-            }
-            return results;
+            var goals = _repository.GetItems(e => e.UserId == userId).ToList();
+            return goals;
         }
 
-        public GoalDto AddGoal(GoalDto goalDto) {
-            var goal = new Goal
-            {
-                Name = goalDto.Name,
-                Description = goalDto.Description,
-                StartDate = goalDto.StartDate,
-                TargetDate = goalDto.TargetDate
-            };
-
-            _context.Goals.Add(goal);
-            _context.SaveChanges();
-
-            //Using generic repository should take care of the Id not being returned here
-            return goalDto;
+        public GoalDto AddGoal(GoalDto goalDto)
+        {
+            var goal = _mapper.Map<Goal>(goalDto);
+            var result = _repository.AddItem(goal);
+            return result;
         }
     }
 }
