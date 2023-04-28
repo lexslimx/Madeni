@@ -16,8 +16,8 @@ namespace Madeni.Shared.Dtos
         public string Name { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime TargetDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now;
+        public DateTime TargetDate { get; set; } = DateTime.Now;
         public string UserId { get; set; }
         public IEnumerable<InvestmentDto> Investments { get; set; }
     }
