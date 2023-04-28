@@ -1,6 +1,73 @@
-﻿@page "/addinvestment"
-<h3>AddInvestment</h3>
+﻿@page "/AddInvestment/{GoalId}"
+@using Madeni.Shared.Dtos
+@using Microsoft.AspNetCore.Authorization
+@inject ILogger<AddInvestment> Logger
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+<h4>AddInvestment</h4>
 
+<EditForm Model="@InvestmentDto" OnValidSubmit="@HandleValidSubmit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="InvestmentDto.Name" class="control-label">Name</label>
+        <input asp-for="InvestmentDto.Name" @bind="InvestmentDto.Name" class="form-control" />
+        <span asp-validation-for="InvestmentDto.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InvestmentDto.Amount" class="control-label">Amount</label>
+        <input asp-for="InvestmentDto.Amount" @bind="InvestmentDto.Amount" class="form-control" />
+        <span asp-validation-for="InvestmentDto.Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InvestmentDto.Description" class="control-label">Description</label>
+        <input asp-for="InvestmentDto.Description" @bind="InvestmentDto.Description" class="form-control" />
+        <span asp-validation-for="InvestmentDto.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InvestmentDto.GoalId" class="control-label">GoalId</label>
+        <input asp-for="InvestmentDto.GoalId" @bind="@GoalId" class="form-control" />
+        <span asp-validation-for="InvestmentDto.GoalId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InvestmentDto.Date" class="control-label">Investment Date</label>
+        <input asp-for="InvestmentDto.Date" type="date" @bind="InvestmentDto.Date" class="form-control" />
+        <span asp-validation-for="InvestmentDto.Date" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm>
 @code {
+    public InvestmentDto? InvestmentDto { get; set; }
 
+    [Parameter]
+    public string? GoalId { get; set; }
+    public string? UiMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        InvestmentDto = new InvestmentDto();
+    }
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
+            InvestmentDto.UserId = userId;
+            InvestmentDto.Id = Guid.NewGuid();
+            var result = await Http.PostAsJsonAsync("/api/Investments", InvestmentDto);
+            UiMessage = "Investment Added";
+            NavigationManager.NavigateTo("/Investments");
+        }
+        catch (Exception exception)
+        {
+            UiMessage = exception.Message;
+        }
+    }
 }
