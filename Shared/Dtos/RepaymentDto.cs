@@ -10,7 +10,7 @@ namespace Madeni.Shared.Dtos
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         public string? LoanName { get; set; }
         public int LoanId { get; set; }
         public string UserId { get; set; } = string.Empty;
