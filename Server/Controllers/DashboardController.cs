@@ -106,7 +106,7 @@ namespace Madeni.Server.Controllers
                 {
                     DisplayOrder = 1,
                     WidgetType = Shared.WidgetType.Expenses,
-                    Total = _context.Expenses.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount),
+                    Total = _context.Expenses.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month == month).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount),
                     Title = Shared.WidgetType.Expenses.ToString()
                 },
 
@@ -114,7 +114,7 @@ namespace Madeni.Server.Controllers
                 {
                     DisplayOrder = 0,
                     WidgetType = Shared.WidgetType.Incomes,
-                    Total = _context.Incomes.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount),
+                    Total = _context.Incomes.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month == month).Sum(i => i.Amount),
                     Title = Shared.WidgetType.Incomes.ToString(),
                     Balance = (_context.Incomes.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount)) - (_context.Expenses.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount) + _context.Repayments.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(i => i.Amount))
                 },
@@ -123,7 +123,7 @@ namespace Madeni.Server.Controllers
                 {
                     DisplayOrder = 3,
                     WidgetType = Shared.WidgetType.Repayments,
-                    Total = _context.Repayments.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month <= month).Sum(e=>e.Amount),
+                    Total = _context.Repayments.Where(e => e.UserId == userId && e.Date.Year == year && e.Date.Month == month).Sum(e=>e.Amount),
                     Title = Shared.WidgetType.Repayments.ToString()
                 }
             };
