@@ -9,6 +9,7 @@ using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
 using System.Security.Claims;
+using Madeni.Server.Services;
 
 namespace Madeni.Server.Controllers
 {
@@ -16,65 +17,32 @@ namespace Madeni.Server.Controllers
     [ApiController]
     public class LoansController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ILoanService _loanService;
 
-        public LoansController(ApplicationDbContext context)
+
+        public LoansController(ILoanService loanService)
         {
-            _context = context;
+            _loanService = loanService;
         }
 
         // GET: api/Loans
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoanDto>>> GetLoans(string userId)
+        public ActionResult<IEnumerable<LoanDto>> GetLoans(string userId)
         {
-          if (_context.Loans == null)
+          if (userId == null)
           {
               return NotFound();
-          }           
-            var loanDtos = new List<LoanDto>();
-            foreach(var loan in await _context.Loans.Include(l => l.Repayments).Where(e=>e.UserId == userId).ToListAsync())
-            {
-                var loanDto = new LoanDto
-                {
-                    Id = loan.Id,
-                    Name = loan.Name,
-                    Amount = loan.Amount,
-                    ProspectiveDate = loan.ProspectiveDate,
-                    StartDate = loan.StartDate,
-                    TotalRepaid = loan.Repayments.Sum(r => r.Amount),
-                    Balance = loan.Amount - (loan.Repayments.Sum(r => r.Amount))
-                };
-                loanDtos.Add(loanDto);
-            }
-            return loanDtos;
+          }
+            var loanDtos = _loanService.GetLoans(userId);
+            return Ok(loanDtos);
         }
 
         // GET: api/Loans/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<LoanDto>> GetLoan(int id)
+        public ActionResult<LoanDto> GetLoan(int id)
         {
-          if (_context.Loans == null)
-          {
-              return NotFound();
-          }
-            var loan = await _context.Loans.FindAsync(id);
-
-            if (loan == null)
-            {
-                return NotFound();
-            }
-
-            var loanDto = new LoanDto
-            {
-                Id = loan.Id,
-                Name = loan.Name,
-                Amount = loan.Amount,
-                ProspectiveDate = loan.ProspectiveDate,
-                StartDate = loan.StartDate,
-                UserId = loan.UserId
-            };
-
-            return loanDto;
+            var loan = _loanService.GetLoan(id);
+            return Ok(loan);
         }
 
         // PUT: api/Loans/5
@@ -82,30 +50,7 @@ namespace Madeni.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLoan(int id, Loan loan)
         {
-            if (id != loan.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(loan).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LoanExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            throw new NotImplementedException();
         }
 
         // POST: api/Loans
@@ -113,49 +58,25 @@ namespace Madeni.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<LoanDto>> PostLoan(LoanDto loanDto)
         {
-          if (_context.Loans == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Loans'  is null.");
-          }            
-            var loan = new Loan
-            {
-                Id = loanDto.Id,
-                Name = loanDto.Name,
-                Amount = loanDto.Amount,
-                ProspectiveDate = loanDto.ProspectiveDate,
-                StartDate = loanDto.StartDate,
-               UserId = loanDto.UserId
-            };
+              if (loanDto == null)
+              {
+                  return Problem("Entity set 'ApplicationDbContext.Loans'  is null.");
+              }
 
-            _context.Loans.Add(loan);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLoan", new { id = loan.Id }, loanDto);
+            var result = _loanService.AddLoan(loanDto);
+            return CreatedAtAction("GetLoan", new { id = result.Id }, loanDto);
         }
 
         // DELETE: api/Loans/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLoan(int id)
         {
-            if (_context.Loans == null)
-            {
-                return NotFound();
-            }
-            var loan = await _context.Loans.FindAsync(id);
-            if (loan == null)
-            {
-                return NotFound();
-            }
-
-            _context.Loans.Remove(loan);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            throw new NotImplementedException();
         }
 
         private bool LoanExists(int id)
         {
-            return (_context.Loans?.Any(e => e.Id == id)).GetValueOrDefault();
+            throw new NotImplementedException();
         }
     }
 }
