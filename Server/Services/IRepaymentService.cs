@@ -5,6 +5,9 @@ namespace Madeni.Server.Services
     public interface IRepaymentService
     {
         RepaymentDto AddRepayment(RepaymentDto RepaymentDto);
-        IEnumerable<RepaymentDto> GetRepayment(string userId);
+
+        IEnumerable<RepaymentDto> GetRepayments(int? loanId, string userId);
+
+        RepaymentDto GetRepayment(int id);
     }
 }

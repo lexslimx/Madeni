@@ -4,8 +4,8 @@ namespace Madeni.Server.Services
 {
     public interface ILoanService
     {
-        LoanDto AddLoan(LoanDto LoanDto);
-        LoanDto GetLoan(int id);
-        IEnumerable<LoanDto> GetLoans(string userId);
+        LoanDto AddItem(LoanDto LoanDto);
+        LoanDto GetItem(int id);
+        IEnumerable<LoanDto> GetItems(string userId);
     }
 }

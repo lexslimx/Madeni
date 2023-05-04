@@ -15,10 +15,16 @@ namespace Madeni.Server.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<RepaymentDto> GetRepayment(string userId)
+        public RepaymentDto GetRepayment(int id)
         {
-            var Repayment = _repository.GetItems(e => e.UserId == userId).ToList();
+            var Repayment = _repository.GetItem(e => e.Id == id);
             return Repayment;
+        }
+
+        public IEnumerable<RepaymentDto> GetRepayments(int? loanId, string userId)
+        {
+            var repayments = _repository.GetItems(e => e.UserId == userId && e.LoanId == loanId).ToList();
+            return repayments;
         }
 
         public RepaymentDto AddRepayment(RepaymentDto RepaymentDto)

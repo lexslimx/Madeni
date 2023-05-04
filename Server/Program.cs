@@ -44,7 +44,11 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IGoalsService, GoalsService>();
 builder.Services.AddScoped<IInvestmentService, InvestmentService>();
- 
+builder.Services.AddScoped<IRepaymentService, RepaymentService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

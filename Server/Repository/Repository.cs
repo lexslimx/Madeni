@@ -32,8 +32,12 @@ namespace Madeni.Server.Repository
             _context.SaveChanges();
             return _context.Set<TEntity>()?.AsEnumerable()?.LastOrDefault();
         }
-        public TEntity GetItem(Expression<Func<TEntity, bool>> predicate)
-         => _context.Set<TEntity>()?.FirstOrDefault(predicate);
+        public TDto GetItem(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entity = _context.Set<TEntity>()?.FirstOrDefault(predicate);
+            var dto = _mapper.Map<TDto>(entity);
+            return dto;
+        }         
 
         public IEnumerable<TDto> GetItems(Expression<Func<TEntity, bool>> predicate)
         {

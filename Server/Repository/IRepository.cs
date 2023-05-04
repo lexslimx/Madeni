@@ -9,7 +9,7 @@ namespace Madeni.Server.Repository
     {
         TDto AddItem(TEntity entity);
 
-        TEntity GetItem(Expression<Func<TEntity, bool>> predicate);
+        TDto GetItem(Expression<Func<TEntity, bool>> predicate);
 
         IEnumerable<TDto> GetItems(Expression<Func<TEntity, bool>> predicate);
 
