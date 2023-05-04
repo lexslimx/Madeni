@@ -35,6 +35,9 @@ builder.Services.AddHttpContextAccessor();
 var config = new MapperConfiguration(cfg => {
     cfg.AddProfile<GoalProfile>();
     cfg.AddProfile<InvestmentProfile>();
+    cfg.AddProfile<IncomeProfile>();
+    cfg.AddProfile<LoanProfile>();
+    cfg.AddProfile<RepaymentProfile>();
 });
 
 var mapper = config.CreateMapper();
