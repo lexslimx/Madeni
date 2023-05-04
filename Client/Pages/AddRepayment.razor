@@ -82,15 +82,12 @@ else
     private async Task HandleValidSubmit()
     {
         Logger.LogInformation("HandleValidSubmit called");
-
-
         try
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             var userId = user.Claims.Where(x => x.Type == "sub").Select(x => x.Value).FirstOrDefault();
             RepaymentDto.UserId = userId;
-
             RepaymentDto.LoanId = loanDto.Id;
             var result = await Http.PostAsJsonAsync("/api/Repayments", RepaymentDto);
             UiMessage = "Income Added";

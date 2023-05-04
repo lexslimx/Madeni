@@ -9,6 +9,7 @@ using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Shared.Dtos;
 using System.Security.Claims;
+using Madeni.Server.Services;
 
 namespace Madeni.Server.Controllers
 {
@@ -16,146 +17,63 @@ namespace Madeni.Server.Controllers
     [ApiController]
     public class RepaymentsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-
-        public RepaymentsController(ApplicationDbContext context)
+        private readonly IRepaymentService _repaymentService;
+        public RepaymentsController(IRepaymentService repaymentService)
         {
-            _context = context;
+            _repaymentService = repaymentService;
         }
 
         // GET: api/Repayments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RepaymentDto>>> GetRepayments(int? loanId, string userId)
+        public ActionResult<IEnumerable<RepaymentDto>> GetRepayments(int? loanId, string userId)
         {
-          if (_context.Repayments == null)
-          {
-              return NotFound();
-          }            
-            var repaymentDtos = new List<RepaymentDto>();
-            List<Repayment> repayments = new List<Repayment>();
-            if (loanId == null)
-            {
-                repayments = await _context.Repayments.Where(r => r.UserId == userId).Include(r => r.Loan).ToListAsync();
-            }
-            else
-            {
-                repayments = await _context.Repayments.Where(r => r.LoanId == loanId && r.UserId == userId).Include(r => r.Loan).ToListAsync();
-            }
-
-            foreach (var repayment in repayments)
-            {
-                var repaymentDto = new RepaymentDto
-                {
-                    Id = repayment.Id,
-                    Amount = repayment.Amount,
-                    Date = repayment.Date,
-                    LoanName = repayment.Loan.Name,
-                    LoanId = repayment.LoanId,
-                    UserId = repayment.UserId
-                };
-
-                repaymentDtos.Add(repaymentDto);
-            }
-            return repaymentDtos;
+            var repaymentDtos = _repaymentService.GetRepayments(loanId, userId);            
+            return Ok(repaymentDtos);
         }
 
         // GET: api/Repayments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Repayment>> GetRepayment(int id)
+        public ActionResult<Repayment> GetRepayment(int id)
         {
-          if (_context.Repayments == null)
-          {
-              return NotFound();
-          }
-            var repayment = await _context.Repayments.FindAsync(id);
+            var repayment = _repaymentService.GetRepayment(id);
 
-            if (repayment == null)
-            {
-                return NotFound();
-            }
-
-            return repayment;
+            return Ok(repayment);
         }
 
         // PUT: api/Repayments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRepayment(int id, Repayment repayment)
+        public IActionResult PutRepayment(int id, Repayment repayment)
         {
-            if (id != repayment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(repayment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RepaymentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            throw new NotImplementedException();
         }
 
         // POST: api/Repayments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RepaymentDto>> PostRepayment(RepaymentDto repaymentDto)
+        public ActionResult<RepaymentDto> PostRepayment(RepaymentDto repaymentDto)
         {
-          if (_context.Repayments == null)
+          if (repaymentDto == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Repayments'  is null.");
           }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var repayment = new Repayment
-            {
-                Id = repaymentDto.Id,
-                Amount = repaymentDto.Amount,
-                Date = repaymentDto.Date,
-                LoanId = repaymentDto.LoanId,
-                UserId = repaymentDto.UserId
-            };
-            _context.Repayments.Add(repayment);           
-            
-            await _context.SaveChangesAsync();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);      
+            repaymentDto.UserId = userId;
 
+            var repayment = _repaymentService.AddRepayment(repaymentDto);
             return CreatedAtAction("GetRepayment", new { id = repayment.Id }, repaymentDto);
         }
 
         // DELETE: api/Repayments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRepayment(int id)
+        public IActionResult DeleteRepayment(int id)
         {
-            if (_context.Repayments == null)
-            {
-                return NotFound();
-            }
-            var repayment = await _context.Repayments.FindAsync(id);
-            if (repayment == null)
-            {
-                return NotFound();
-            }
-
-            _context.Repayments.Remove(repayment);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            throw new NotImplementedException();
         }
 
         private bool RepaymentExists(int id)
         {
-            return (_context.Repayments?.Any(e => e.Id == id)).GetValueOrDefault();
+            throw new NotImplementedException();
         }
     }
 }

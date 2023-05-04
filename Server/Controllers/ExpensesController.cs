@@ -36,7 +36,7 @@ namespace Madeni.Server.Controllers
         // PUT: api/Expenses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExpense(int id, Expense expense)
+        public IActionResult PutExpense(int id, Expense expense)
         {
             throw new NotImplementedException();
         }
@@ -52,7 +52,7 @@ namespace Madeni.Server.Controllers
 
         // DELETE: api/Expenses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExpense(int id)
+        public IActionResult DeleteExpense(int id)
         {
             throw new NotImplementedException();
         }

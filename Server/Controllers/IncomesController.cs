@@ -34,7 +34,7 @@ namespace Madeni.Server.Controllers
 
         // GET: api/Incomes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Income>> GetIncome(int id)
+        public ActionResult<Income> GetIncome(int id)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace Madeni.Server.Controllers
         // PUT: api/Incomes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIncome(int id, Income income)
+        public IActionResult PutIncome(int id, Income income)
         {
             throw new NotImplementedException();        
         }
@@ -50,7 +50,7 @@ namespace Madeni.Server.Controllers
         // POST: api/Incomes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<IncomeDto>> PostIncome(IncomeDto incomeDto)
+        public ActionResult<IncomeDto> PostIncome(IncomeDto incomeDto)
         {
             if (incomeDto == null)
             {
@@ -62,7 +62,7 @@ namespace Madeni.Server.Controllers
 
         // DELETE: api/Incomes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteIncome(int id)
+        public IActionResult DeleteIncome(int id)
         {
             throw new NotImplementedException();
         }

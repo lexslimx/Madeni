@@ -33,7 +33,7 @@ namespace Madeni.Server.Controllers
           {
               return NotFound();
           }
-            var loanDtos = _loanService.GetLoans(userId);
+            var loanDtos = _loanService.GetItems(userId);
             return Ok(loanDtos);
         }
 
@@ -41,14 +41,14 @@ namespace Madeni.Server.Controllers
         [HttpGet("{id}")]
         public ActionResult<LoanDto> GetLoan(int id)
         {
-            var loan = _loanService.GetLoan(id);
+            var loan = _loanService.GetItem(id);
             return Ok(loan);
         }
 
         // PUT: api/Loans/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLoan(int id, Loan loan)
+        public IActionResult PutLoan(int id, Loan loan)
         {
             throw new NotImplementedException();
         }
@@ -56,14 +56,14 @@ namespace Madeni.Server.Controllers
         // POST: api/Loans
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<LoanDto>> PostLoan(LoanDto loanDto)
+        public ActionResult<LoanDto> PostLoan(LoanDto loanDto)
         {
               if (loanDto == null)
               {
                   return Problem("Entity set 'ApplicationDbContext.Loans'  is null.");
               }
 
-            var result = _loanService.AddLoan(loanDto);
+            var result = _loanService.AddItem(loanDto);
             return CreatedAtAction("GetLoan", new { id = result.Id }, loanDto);
         }
 
