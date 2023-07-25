@@ -38,6 +38,7 @@ var config = new MapperConfiguration(cfg => {
     cfg.AddProfile<IncomeProfile>();
     cfg.AddProfile<LoanProfile>();
     cfg.AddProfile<RepaymentProfile>();
+    cfg.AddProfile<ExpenseProfile>();
 });
 
 var mapper = config.CreateMapper();
