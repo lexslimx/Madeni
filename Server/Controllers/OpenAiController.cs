@@ -3,6 +3,7 @@ using Azure.AI.OpenAI;
 using Madeni.Server.Models;
 using Madeni.Server.Services;
 using Madeni.Shared.Dtos;
+using Madeni.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
