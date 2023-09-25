@@ -32,7 +32,7 @@ namespace Madeni.Server.Controllers
             ExpenseDto expense = new ExpenseDto
             {
                 Amount = Decimal.Parse(result.Amount),
-                Date = DateTime.Parse(result.TransactionDate),        
+                Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
                 UserId = mobileTransaction.UserId,
                 Name = result.Source,
             };
