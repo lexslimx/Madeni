@@ -18,9 +18,11 @@ namespace Madeni.Server.Controllers
     public class OpenAiController : ControllerBase
     {
         private readonly IExpenseService expenseService;
-        public OpenAiController(IExpenseService expenseService)
+        private readonly IIncomeService incomeService;
+        public OpenAiController(IExpenseService expenseService, IIncomeService incomeService)
         {
-           this.expenseService = expenseService;
+            this.expenseService = expenseService;
+            this.incomeService = incomeService;
         }
         // GET: api/<OpenAiController>
         [HttpPost]
@@ -28,17 +30,31 @@ namespace Madeni.Server.Controllers
         {
             var result = await ProcessMessage(mobileTransaction.Message, mobileTransaction.ApiKey);
 
-            // Add transacation to user
-            ExpenseDto expense = new ExpenseDto
+            if(result.TransactionType == "sent")
+            { 
+                // Add transacation to user
+                ExpenseDto expense = new ExpenseDto
+                {
+                    Amount = Decimal.Parse(result.Amount),
+                    Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
+                    UserId = mobileTransaction.UserId,
+                    Name = result.Source,
+                };
+                this.expenseService.AddExpense(expense);
+            }
+            else
             {
-                Amount = Decimal.Parse(result.Amount),
-                Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
-                UserId = mobileTransaction.UserId,
-                Name = result.Source,
-            };
-
-            this.expenseService.AddExpense(expense);
-
+                // Add income to user
+                IncomeDto income = new IncomeDto
+                {
+                    Amount = Decimal.Parse(result.Amount),
+                    Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
+                    UserId = mobileTransaction.UserId,
+                    Name = result.Source,
+                };
+                this.incomeService.AddIncome(income);
+            }
+ 
             return result;
         }
 
