@@ -51,7 +51,7 @@ namespace Madeni.Server.Controllers
 
             Response<Completions> response = await client.GetCompletionsAsync(
                 "text-davinci-003", // assumes a matching model deployment or model name
-                "Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent or received), TransactionDate (in dotnet datetime format), Amount, Source from this message:" + message);
+                "Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent or received), TransactionDate (convert this to dotnet datetime format), Amount, Source from this message:" + message);
 
             foreach (Choice choice in response.Value.Choices)
             {
