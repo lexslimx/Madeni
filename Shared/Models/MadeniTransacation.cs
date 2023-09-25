@@ -1,4 +1,4 @@
-﻿namespace Madeni.Server.Models
+﻿namespace Madeni.Shared.Models
 {
     public class MadeniTransacation
     {
