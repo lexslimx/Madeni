@@ -37,7 +37,7 @@ namespace Madeni.Server.Controllers
                 // Add transacation to user
                 ExpenseDto expense = new ExpenseDto
                 {
-                    Amount = Decimal.Parse(result.Amount),
+                    Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
                     Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
@@ -49,7 +49,7 @@ namespace Madeni.Server.Controllers
                 // Add income to user
                 IncomeDto income = new IncomeDto
                 {
-                    Amount = Decimal.Parse(result.Amount),
+                    Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
                     Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
