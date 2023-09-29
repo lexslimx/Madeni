@@ -64,32 +64,6 @@ namespace Madeni.Server.Controllers
             return result;
         }
 
-        //// Create method to process the message
-        //private async Task<MadeniTransacation> ProcessMessage(string message, string apiKey)
-        //{
-        //    var responses = new List<string>();
-
-        //    OpenAIClient client = new OpenAIClient(apiKey);
-
-        //    Response<Completions> response = await client.GetCompletionsAsync(
-        //        "GPT-3.5", // assumes a matching model deployment or model name
-        //        "Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid or received. Indicate as unknown if not one of these. If it is a ), TransactionDate (convert this to dotnet datetime format), Amount (as a decimal value), Source (indicate who sent to, paid to or received from) from this message:" + message);
-
-        //    foreach (Azure.AI.OpenAI.Choice choice in response.Value.Choices)
-        //    {
-        //        Console.WriteLine(choice.Text);
-        //        responses.Add(choice.Text);
-        //    }
-
-        //    var ans = response.Value.Choices[0].Text;
-        //    //Reeplace special characters in response
-        //    ans = ans.Replace("\n", "");
-
-        //    var transaction = JsonConvert.DeserializeObject<MadeniTransacation>(ans);
-
-        //    return transaction;
-        //}
-
         // Create a method to query the chatgpt 4 model using the completions api
         private async Task<MadeniTransacation> QueryChatGpt4(string message, string apiKey)
         {
