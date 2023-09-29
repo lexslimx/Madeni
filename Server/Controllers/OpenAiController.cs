@@ -29,10 +29,10 @@ namespace Madeni.Server.Controllers
         [HttpPost]
         public async Task<MadeniTransacation> Post([FromBody] MobileTransaction mobileTransaction)
         {
-            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent or received), TransactionDate (convert this to dotnet datetime format), Amount, Source from this message: {mobileTransaction.Message}";
+            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid or received. Set to unknown if not one of these), TransactionDate (convert this to dotnet datetime format), Amount (convveert to a decimal value), Source from this message: {mobileTransaction.Message}";
             var result = await QueryChatGpt4(message, mobileTransaction.ApiKey);
 
-            if (result.TransactionType == "sent")
+            if (result.TransactionType == "sent" || result.TransactionType == "paid" )
             {
                 // Add transacation to user
                 ExpenseDto expense = new ExpenseDto
@@ -44,7 +44,7 @@ namespace Madeni.Server.Controllers
                 };
                 this.expenseService.AddExpense(expense);
             }
-            else
+            else if(result.TransactionType == "received")
             {
                 // Add income to user
                 IncomeDto income = new IncomeDto
@@ -55,6 +55,10 @@ namespace Madeni.Server.Controllers
                     Name = result.Source,
                 };
                 this.incomeService.AddIncome(income);
+            }
+            else
+            {
+
             }
 
             return result;
@@ -69,7 +73,7 @@ namespace Madeni.Server.Controllers
 
             Response<Completions> response = await client.GetCompletionsAsync(
                 "GPT-3.5", // assumes a matching model deployment or model name
-                "Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent or received), TransactionDate (convert this to dotnet datetime format), Amount, Source from this message:" + message);
+                "Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid or received. Indicate as unknown if not one of these), TransactionDate (convert this to dotnet datetime format), Amount (as a decimal value), Source from this message:" + message);
 
             foreach (Azure.AI.OpenAI.Choice choice in response.Value.Choices)
             {
@@ -107,7 +111,7 @@ namespace Madeni.Server.Controllers
             //Reeplace special characters in response
             ans = ans.Replace("\n", "");
 
-            var transaction = JsonConvert.DeserializeObject<MadeniTransacation>(ans);
+                var transaction = JsonConvert.DeserializeObject<MadeniTransacation>(ans);
 
             return transaction;
         }
