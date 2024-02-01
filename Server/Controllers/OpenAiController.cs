@@ -38,7 +38,7 @@ namespace Madeni.Server.Controllers
                 ExpenseDto expense = new ExpenseDto
                 {
                     Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
-                    Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
+                    Date = mobileTransaction.TransactionDate,
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
@@ -50,7 +50,7 @@ namespace Madeni.Server.Controllers
                 IncomeDto income = new IncomeDto
                 {
                     Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
-                    Date = DateTime.TryParse(result.TransactionDate, out DateTime date) ? date : DateTime.Now,
+                    Date = mobileTransaction.TransactionDate,
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
