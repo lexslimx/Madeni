@@ -23,8 +23,21 @@ namespace Madeni.Server.Services
 
         public IEnumerable<RepaymentDto> GetRepayments(int? loanId, string userId)
         {
-            var repayments = _repository.GetItems(e => e.UserId == userId && e.LoanId == loanId).ToList();
-            return repayments;
+            if (loanId == null)
+            { 
+                var repayments = _repository.GetItems(e => e.UserId == userId).ToList();
+                return repayments;
+            }
+            else if (userId == null)
+            {
+                var repayments = _repository.GetItems(e => e.LoanId == loanId).ToList();
+                return repayments;
+            }
+            else
+            {
+                var repayments = _repository.GetItems(e => e.UserId == userId && e.LoanId == loanId).ToList();
+                return repayments;
+            }            
         }
 
         public RepaymentDto AddRepayment(RepaymentDto RepaymentDto)
