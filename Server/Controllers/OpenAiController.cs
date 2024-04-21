@@ -83,7 +83,7 @@ namespace Madeni.Server.Controllers
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
-               // this.expenseService.AddExpense(expense);
+               this.expenseService.AddExpense(expense);
             }
             else if (result.TransactionType == "received" || result.TransactionType == "deposited" || result.TransactionType == "credited")
             {
@@ -95,7 +95,7 @@ namespace Madeni.Server.Controllers
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
-              // this.incomeService.AddIncome(income);
+                this.incomeService.AddIncome(income);
             }
             else
             {
