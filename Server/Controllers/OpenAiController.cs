@@ -25,11 +25,52 @@ namespace Madeni.Server.Controllers
             this.expenseService = expenseService;
             this.incomeService = incomeService;
         }
-        // GET: api/<OpenAiController>
-        [HttpPost]
+        //// GET: api/<OpenAiController>
+        //[HttpPost]
+        //public async Task<MadeniTransacation> Post([FromBody] MobileTransaction mobileTransaction)
+        //{
+        //    var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid, bought or purchase. Indicate as unknown if not one of these. If it is a ), TransactionDate (currently in the format day/month/year, convert this to dotnet datetime format dd/mm/yyyy), Amount (as a decimal value), Source (indicate who sent to, paid to, received from or what was bought) from this message: {mobileTransaction.Message}";
+        //    var result = await QueryChatGpt4(message, mobileTransaction.ApiKey);
+
+        //    if (result.TransactionType == "sent" || result.TransactionType == "paid" || result.TransactionType == "purchase")
+        //    {
+        //        // Add transacation to user
+        //        ExpenseDto expense = new ExpenseDto
+        //        {
+        //            Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
+        //            Date = mobileTransaction.TransactionDate,
+        //            UserId = mobileTransaction.UserId,
+        //            Name = result.Source,
+        //        };
+        //        this.expenseService.AddExpense(expense);
+        //    }
+        //    else if(result.TransactionType == "received")
+        //    {
+        //        // Add income to user
+        //        IncomeDto income = new IncomeDto
+        //        {
+        //            Amount = Decimal.TryParse(result.Amount, out decimal amount) ? amount : 0,
+        //            Date = mobileTransaction.TransactionDate,
+        //            UserId = mobileTransaction.UserId,
+        //            Name = result.Source,
+        //        };
+        //        this.incomeService.AddIncome(income);
+        //    }
+        //    else
+        //    {
+
+        //    }
+
+        //    return result;
+        //}
+
+        [HttpPost]        
         public async Task<MadeniTransacation> Post([FromBody] MobileTransaction mobileTransaction)
         {
-            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid, bought or purchase. Indicate as unknown if not one of these. If it is a ), TransactionDate (currently in the format day/month/year, convert this to dotnet datetime format dd/mm/yyyy), Amount (as a decimal value), Source (indicate who sent to, paid to, received from or what was bought) from this message: {mobileTransaction.Message}";
+            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid, deposited, bought or purchase. Indicate as unknown if not one of these.), " +
+                $"TransactionDate (currently in the format day/month/year, " +
+                $"convert this to dotnet datetime format dd/mm/yyyy), Amount (as a decimal value), Source (indicate who sent to, paid to, received from or what was bought) from this message:" +
+                $" {mobileTransaction.Message}.Consider transactions to and from ALEX KINYUA MAINA to be of type unknown";
             var result = await QueryChatGpt4(message, mobileTransaction.ApiKey);
 
             if (result.TransactionType == "sent" || result.TransactionType == "paid" || result.TransactionType == "purchase")
@@ -42,9 +83,9 @@ namespace Madeni.Server.Controllers
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
-                this.expenseService.AddExpense(expense);
+               // this.expenseService.AddExpense(expense);
             }
-            else if(result.TransactionType == "received")
+            else if (result.TransactionType == "received" || result.TransactionType == "deposited")
             {
                 // Add income to user
                 IncomeDto income = new IncomeDto
@@ -54,7 +95,7 @@ namespace Madeni.Server.Controllers
                     UserId = mobileTransaction.UserId,
                     Name = result.Source,
                 };
-                this.incomeService.AddIncome(income);
+              // this.incomeService.AddIncome(income);
             }
             else
             {
