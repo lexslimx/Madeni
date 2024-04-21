@@ -67,13 +67,13 @@ namespace Madeni.Server.Controllers
         [HttpPost]        
         public async Task<MadeniTransacation> Post([FromBody] MobileTransaction mobileTransaction)
         {
-            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid, deposited, credited, bought or purchase. Indicate as unknown if not one of these.), " +
+            var message = $"Get the key elements and return as a json object with the properties: TransactionType (indicates if money was sent, paid, deposited, transaction, credited, bought or purchase. Indicate as unknown if not one of these.), " +
                 $"TransactionDate (currently in the format day/month/year, " +
                 $"convert this to dotnet datetime format dd/mm/yyyy), Amount (as a decimal value), Source (indicate who sent to, paid to, received from or what was bought) from this message:" +
                 $" {mobileTransaction.Message}.";
             var result = await QueryChatGpt4(message, mobileTransaction.ApiKey);
 
-            if (result.TransactionType == "sent" || result.TransactionType == "paid" || result.TransactionType == "purchase")
+            if (result.TransactionType == "sent" || result.TransactionType == "paid" || result.TransactionType == "purchase" || result.TransactionType == "transaction")
             {
                 // Add transacation to user
                 ExpenseDto expense = new ExpenseDto
