@@ -11,5 +11,6 @@ namespace Madeni.Server.Data
         DbSet<Investment> Investments { get; set; }
         DbSet<Loan> Loans { get; set; }
         DbSet<Repayment> Repayments { get; set; }
+        DbSet<TransactionMessage> TransactionMessages { get; set; }
     }
 }

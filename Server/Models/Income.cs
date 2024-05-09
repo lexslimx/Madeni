@@ -11,5 +11,7 @@ namespace Madeni.Server.Models
         public IncomeFrequency Frequency { get; set; }
         public IncomeType Type { get; set; }
         public string UserId { get; set; } = string.Empty;
+        public int? TransactionMessageId { get; set; }
+        public virtual TransactionMessage TransactionMessage { get; set; }
     }
 }

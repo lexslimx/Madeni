@@ -11,5 +11,7 @@ namespace Madeni.Server.Models
         [ForeignKey("Loan")]
         public int LoanId { get; set; }
         public string UserId { get; set; } = string.Empty;
+        public int? TransactionMessageId { get; set; }
+        public virtual TransactionMessage TransactionMessage { get; set; }
     }
 }

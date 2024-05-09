@@ -1,12 +1,12 @@
 ﻿using Azure;
 using Azure.AI.OpenAI;
+using Madeni.Server.Data;
 using Madeni.Server.Models;
 using Madeni.Server.Services;
 using Madeni.Shared.Dtos;
 using Madeni.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,6 +24,7 @@ namespace Madeni.Server.Controllers
         {
             this.expenseService = expenseService;
             this.incomeService = incomeService;
+            error
         }
         //// GET: api/<OpenAiController>
         //[HttpPost]
